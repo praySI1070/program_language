@@ -72,5 +72,35 @@
     <ClCompile Include="19.procedure.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="20.if.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="21.if_else.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="22.if_elseif_else.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="23.if_nesting.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="24.switch_case.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="25.while.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="26.for.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="26_1double_for.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="26_2double_for.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="26_3double_for.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
