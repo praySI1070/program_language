@@ -37,5 +37,5 @@ int main()
 		printf("\n");
 	}
 
-
+	printf("%d", i);  // int를 밖에서 선언했기 때문에 i가 밖에서 존재
 }

@@ -102,5 +102,20 @@
     <ClCompile Include="26_3double_for.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="27.break.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="28.function.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="28_1.non_variable_function.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="28_2.non_return_value_function.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="28_3.non_fuction.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
