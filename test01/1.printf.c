@@ -1,4 +1,5 @@
 #include <stdio.h> //stdio.h에 저장된 함수를 불러옴
+//printf의 원형은 int printf로서 ""안의 문자열의 갯수를 반환한다.
 
 int main() // 함수는 구조 <반환형 / 함수이름 / 매개변수>로 되어있다. int는 반환형 main은 함수이름 ()안에는 변수
 {

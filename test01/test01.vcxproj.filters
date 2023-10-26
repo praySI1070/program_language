@@ -117,5 +117,17 @@
     <ClCompile Include="28_3.non_fuction.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="28_4.minus_function.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="28_5.Local_Variables_and_Recursion.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="28_5_1.Local_Variables_and_Recursion2.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="28_5_2.tail call recursion.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
