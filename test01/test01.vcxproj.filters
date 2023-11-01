@@ -129,5 +129,11 @@
     <ClCompile Include="28_5_2.tail call recursion.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="29.array.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="29_1.array_reset.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
