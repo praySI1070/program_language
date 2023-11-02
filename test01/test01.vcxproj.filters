@@ -135,5 +135,11 @@
     <ClCompile Include="29_1.array_reset.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="29_2.array_loop.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="29_3.array_sizeof.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
