@@ -141,5 +141,29 @@
     <ClCompile Include="29_3.array_sizeof.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="29_4.array_char.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="29_5.strcpy.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="30.pointer.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="30_1.pointer_.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="30_2.pointer_const.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="30_3.pointer_size.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="30_4.pointer_swap.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="31_1.array&amp;pointer.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
