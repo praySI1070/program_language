@@ -165,5 +165,8 @@
     <ClCompile Include="31_1.array&amp;pointer.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="31_2.array&amp;pointer.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
