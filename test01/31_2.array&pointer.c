@@ -1,3 +1,4 @@
+//≈• = FIFO(first in first out) Ω∫≈√ = FILO(first in last out)
 #include <stdio.h>
 
 int main()

@@ -168,5 +168,11 @@
     <ClCompile Include="31_2.array&amp;pointer.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="31_3array&amp;pointer_minus.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="31_4array&amp;pointer_vlue.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
