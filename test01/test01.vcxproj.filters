@@ -174,5 +174,26 @@
     <ClCompile Include="31_4array&amp;pointer_vlue.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="31_5.array&amp;pointer_differentValue.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="31_6.array&amp;pointer_double.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="32.character.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="32_1.character_BchangeS.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="32_2.character_funtion.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="32_3.character_buffer.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="32_3" />
   </ItemGroup>
 </Project>
