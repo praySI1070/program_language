@@ -192,8 +192,11 @@
     <ClCompile Include="32_3.character_buffer.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="32_3" />
+    <ClCompile Include="32.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="static.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
