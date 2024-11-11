@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { Routes } from 'react-router-dom';
+import { Routes, BrowserRouter as Router } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Header from "../src/components/Header";
 import Loading from '../src/components/Loading';
 
 const Index = () => {
@@ -33,9 +34,11 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <Index />
-  </React.StrictMode>
+  <Router>
+    <React.StrictMode>
+      <Index />
+    </React.StrictMode>
+  </Router>
 );
 
 // If you want to start measuring performance in your app, pass a function
