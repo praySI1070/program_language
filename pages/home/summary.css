@@ -1,0 +1,41 @@
+.summary-main {
+    display: flex;
+    height : 70vh;
+    width : 100vw;
+    justify-content: center;
+    align-items: center;
+    background-color: #312e2d;
+    margin:0;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+}
+
+.video-container {
+    width : 40vw;
+    height : 70vh;
+}
+
+.text-container {
+    width : 40vw;
+    height : 70vh;
+    margin-left: 5vw;
+    color:#900603;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 30px;
+}
+
+.text-title {
+    color:#900603;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 40px;
+}
+
+.text-body {
+    margin-top:2%;
+    color:white;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 17px;
+}
