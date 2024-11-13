@@ -1,11 +1,11 @@
 import "./discuss.css";
-import Header from "../../components/Header";
+import {HeaderNoIndex} from "../../components/Header";
 import Footer from "../../components/Footer";
 
 export default function Discuss() {
     return(
         <div className="discuss">
-            <Header/>
+            <HeaderNoIndex/>
             <div className="discuss-container">
                 <div className="title">FQA</div>
                 <div className="write-discuss-container">

@@ -6,24 +6,30 @@ import Summary from "./summary";
 import New from "./new";
 import Controll from "./controll";
 import Footer from "../../components/Footer";
+import { Link  } from 'react-scroll';
 
 
 
 export default function Home() {
-    const [isOpenModal, setOpenModal] = useState<boolean>(false);
 
 
 
     return (
-        <div className="Home">
+        <div className="Home" id="home">
             <Header/>
             <Start1/>
             <div className="reverse">
                 <Start1/>
             </div>
-            <Summary/>
+            <div id="summary">
+                <Summary/>
+            </div>
+            <div id="new">
             <New/>
+            </div>
+            <div id="controll">
             <Controll/>
+            </div>
             <Footer/>
         </div>
     );

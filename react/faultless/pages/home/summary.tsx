@@ -2,7 +2,7 @@ import './summary.css';
 
 export default function Summary() {
     return (
-        <div className='summary-main'>
+        <div className='summary-main' id='summary'>
             <div className='video-container'></div>
             <div className='text-container'>
                 <div className='text-title'>싸우자! 마법사: 암흑의 시대</div>
