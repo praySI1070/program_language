@@ -1,0 +1,57 @@
+mysql을 javascript에서 쓸려면 pool이라는 것을 활용하여 여러개의 연결을 다 써야
+여러개의 요청이 여러번 들어올 경우 대처가 가능하다는 것을 알았음.
+
+그 전 코드들
+
+const conn = mysql.createConnection({
+  host : '192.168.5.147',
+  user : 'minchan',
+  password : '1234',
+  database : 'FAULTLESS',
+  port : '3336'
+});
+
+// async function test() {
+//     await conn.connect();
+//     conn.query('SELECT * FROM ACCOUNT', (error, rows, fields) => {
+//         if(error) throw error;
+//         if(rows) {
+//             console.log('test function : ',rows);
+//             conn.end();
+//             return rows;
+//         }
+//     });
+//     await conn.end();
+// }
+
+function queryPromise(query) {
+    return new Promise((resolve, reject) => {
+        conn.query(query, (error, rows, fields) => {
+            if (error) reject(error);
+            resolve([rows, fields]);
+        });
+    });
+}
+
+async function Login(id,password) {
+    try {
+        await conn.connect();
+
+        const [rows, fields] = await queryPromise(`SELECT * from ACCOUNT WHERE id = "${id}" and password = "${password}"`);
+
+        console.log('test function :', rows);
+
+        await conn.end();
+
+        let result = Boolean(false);
+
+        if(rows.length != 0) {
+            result = Boolean(true);
+        }
+
+        return result;
+    } catch (errer) {
+        console.error('Error mysql fc Login: ', error);
+        throw errror;
+    }
+}
