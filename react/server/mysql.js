@@ -46,6 +46,22 @@ async function Login(id,password) {
       }
 }
 
+async function CheckId(id) {
+  try {
+    console.log(id);
+    const [rows, fields] = await queryPromise(
+      `SELECT Check_Id(?) AS RESULT`,
+      [id]
+    );
+    console.log(rows);
+    return rows[0].RESULT;
+  } catch (err) {
+    console.error('Error in CheckId function: ', err);
+    throw err;  // 오류 발생 시 예외 던지기
+  }
+}
+
 module.exports = {
-    Login
+    Login,
+    CheckId
 };

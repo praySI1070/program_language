@@ -1,9 +1,10 @@
 const express = require('express'); //express를 설치했기 때문에 가져올 수 있다.
 const cors = require('cors');
 const {Login} = require('./mysql.js');
+const {CheckId} = require('./mysql.js');
 
 const app = express();
-const port = process.env.PORT || 7000;
+const port = process.env.PORT || 6500;
 const server = require('http').createServer(app);
 
 const cookieParser = require('cookie-parser');
@@ -109,6 +110,29 @@ app.post('/logout', (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: 'Logout failed', detail: error });
+  }
+});
+
+app.post('/Check-id', async (req,res) => {
+  console.log(req.body);
+  try {
+    const result = await CheckId(req.body['id']);
+    let check = false;
+    
+
+    console.log('result:    ' + result);
+    if(result) {
+      res.json({
+        check: check
+      });
+    }
+    else {
+      res.json({
+        check: check
+      });
+    }
+  } catch(error) {
+    res.status(500).json({ error: 'Check-id failed', detail: error });
   }
 });
 
