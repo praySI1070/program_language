@@ -26,17 +26,12 @@ function queryPromise(query, values = []) {
 }
 
 async function Login(id,password) {
-    console.log(id);
-    console.log(password);
     try {
         // 쿼리 실행
         const [rows, fields] = await queryPromise(
           `SELECT SERACH_ID(?,?) AS Login_result`, 
           [id, password]
         );
-    
-        console.log('Login query result:', rows);
-        console.log('dic: ', Object.keys(rows[0]).length);
     
         // 로그인 성공 여부 반환
         return rows[0].Login_result; // 결과가 있으면 로그인 성공
@@ -48,12 +43,10 @@ async function Login(id,password) {
 
 async function CheckId(id) {
   try {
-    console.log(id);
     const [rows, fields] = await queryPromise(
       `SELECT Check_Id(?) AS RESULT`,
       [id]
     );
-    console.log(rows);
     return rows[0].RESULT;
   } catch (err) {
     console.error('Error in CheckId function: ', err);
@@ -61,7 +54,64 @@ async function CheckId(id) {
   }
 }
 
+async function SignUp(id,name,ps,year,month,day,phone1,phone2,phone3) {
+  try {
+    const date = year + '-' + month + '-' + day;
+    const phone = phone1 + phone2 + phone3;
+    const [rows, fields] = await queryPromise(
+      'SELECT SIGN_UP(?,?,?,?,?) AS RESULT',
+      [id,name,ps,date,phone]
+    );
+    return rows[0].RESULT;
+  } catch (err) {
+    console.error('Error in SignUp function: ', err);
+    throw err;  // 오류 발생 시 예외 던지기
+  }
+}
+
+async function MemberOut(id) {
+  try {
+    const [rows, fields] = await queryPromise(
+      'SELECT DELETE_ID(?) AS RESULT',
+      [id]
+    );
+    return rows[0].RESULT;
+  } catch(err) {
+    console.error('Error in SignUp function: ', err);
+    throw err;  // 오류 발생 시 예외 던지기
+  }
+}
+
+async function SerachDiscuss() {
+  try {
+    const [rows,fields] = await queryPromise(
+      'SELECT SERACH_FQA() AS RESULT'
+    );
+    return rows[0].RESULT;
+  } catch (err) {
+    console.error('Error in SerachDiscuss function: ', err);
+    throw err;
+  }
+}
+
+async function DiscussInput(id,detail) {
+  try {
+    const [rows,fields] = await queryPromise(
+      'SELECT INSERT_FQA(?,?) AS RESULT',
+      [id,detail]
+    );
+    return rows[0].RESULT;
+  } catch (err) {
+    console.error('Error in DiscussInput function: ', err);
+    throw err;
+  }
+}
+
 module.exports = {
     Login,
-    CheckId
+    CheckId,
+    SignUp,
+    MemberOut,
+    SerachDiscuss,
+    DiscussInput
 };

@@ -1,7 +1,8 @@
 const express = require('express'); //express를 설치했기 때문에 가져올 수 있다.
 const cors = require('cors');
-const {Login} = require('./mysql.js');
-const {CheckId} = require('./mysql.js');
+const formidable = require('formidable');
+const {Login,CheckId,SignUp,MemberOut,SerachDiscuss,DiscussInput} = require('./mysql.js');
+const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 6500;
@@ -10,6 +11,7 @@ const server = require('http').createServer(app);
 const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 
+//환경변수 .env파일읽기
 require('dotenv').config();
 const SK = process.env.SK || 'default_value';  // SK가 없으면 'default_value'를 사용
 
@@ -30,19 +32,23 @@ app.use(
     secret: SK,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { 
+      secure: false,
+      maxAge: 1000 * 60 * 60 * 24 ,
+      sameSite: 'None',
+      httpOnly: true,    // JavaScript에서 접근할 수 없도록
+      },
   })
 );
 
+app.use(express.static(path.join(__dirname, 'build')));
+
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 
 app.post('/Login', async (req,res) => {
-  console.log(req.body);
-
-  
   try {
     const result = await Login(req.body['id'],req.body['pw']);
     let check = false;
@@ -60,7 +66,14 @@ app.post('/Login', async (req,res) => {
      req.session.userSign = signdate.split('.')[0];  // 사용자 가입일
      req.session.userIsLogin = check;  // 로그인 상태
 
-    
+      // 쿠키를 클라이언트에 전달 (자동으로 세션 ID는 'connect.sid'로 설정됨)
+    res.cookie('userId', req.body['id'], {
+      httpOnly: true, // JavaScript에서 접근할 수 없도록 설정 (보안)
+      secure: process.env.NODE_ENV === 'production', // HTTPS 환경에서만 true
+      sameSite: 'None', // CORS 요청 시 쿠키 전달 허용
+      maxAge: 1000 * 60 * 60 * 24, // 쿠키 만료 시간 (1일)
+    });
+
     res.json({
       message:message_de,
       userIsLogin: check,
@@ -76,8 +89,6 @@ app.post('/Login', async (req,res) => {
 
 // 세션 확인 API (로그인 상태 체크)
 app.get('/check-session', (req, res) => {
-  console.log("22");
-  console.log("test01" + req.session.userId);
   if (req.session.userIsLogin) {
     res.json({
       loggedIn: true,
@@ -114,31 +125,82 @@ app.post('/logout', (req, res) => {
 });
 
 app.post('/Check-id', async (req,res) => {
-  console.log(req.body);
   try {
     const result = await CheckId(req.body['id']);
     let check = false;
     
-
-    console.log('result:    ' + result);
     if(result) {
-      res.json({
-        check: check
-      });
+      check = true;
     }
     else {
-      res.json({
-        check: check
-      });
+      check = false;
     }
+    res.json({
+      check: check
+    });
   } catch(error) {
     res.status(500).json({ error: 'Check-id failed', detail: error });
   }
 });
 
-app.post('/discuss', (req, res) => {
-  console.log("22");
-  res.send("11");
+app.post('/signup', async (req,res) => {
+  const result = await SignUp(req.body['id'],req.body['name'],req.body['ps'],req.body['selectedYear'],
+    req.body['selectedMonth'],req.body['selectedDay'],req.body['selectedPhone'],req.body['middlePhone'],
+    req.body['lastPhone']);
+  
+  let check = false;
+  if(result) {
+    check = true;
+  }
+  else {
+    check = false;
+  }
+  res.json({
+    check: check
+  });
+})
+
+app.post('/member-out', async (req,res) => {
+
+  const result = await MemberOut(req.body['userId']);
+
+  let check = false;
+  if(result) {
+    check = true;
+  }
+  else {
+    check = false;
+  }
+  res.json({
+    check: check
+  });
+})
+
+app.post('/discuss', async (req, res) => {
+  const result = await SerachDiscuss();
+  res.json(result);
+});
+
+app.post('/discussInput', async (req,res) => {
+  console.log("userId: ",req.body.userId)
+  const result = await DiscussInput(req.body.userId,req.body['fqaDetail']);
+
+  let check = false;
+  if(result) {
+    check = true;
+  }
+  else {
+    check = false;
+  }
+  res.json({
+    check: check
+  });
+});
+
+app.get('/GameDownload', async (req,res) => {
+  const filename = 'Fight_Wizard1.1.zip';
+  res.setHeader('Content-Disposition', `attachment; filename=${filename}`); //  Content-Disposition 헤더를 브라우저가 읽고 다운로드라고 인식
+  res.sendFile("D:\\praySI01\\1.2\\react\\faultless\\server\\GameFile\\Fight_Wizard1.1.zip"); //파일경로
 });
 
 server.listen(port, () =>{
