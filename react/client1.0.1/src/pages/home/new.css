@@ -1,0 +1,140 @@
+
+
+.new-container {
+    display: flex;
+    height : 100vh;
+    width : 100vw;
+    background-color: #312e2d;
+    margin:0;
+    flex-direction: column;
+}
+.new-title {
+    margin-top: 10px;
+    color: #900603;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 40px;
+    padding: 3%;
+}
+
+.new-title-detail-container {
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.left {
+    margin-left: 20px;
+    height: 40vh;
+    width: 20vw;
+    display: flex;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.left-hide {
+    margin-left: 20px;
+    height: 40vh;
+    width: 20vw;
+    display: none;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.left:hover {
+    transform: scale(1.3);
+}
+
+.left-img {
+    margin-top: 30%;
+    height: 18vh;
+    display: flex;
+}
+
+.left-text{
+    margin-top : 10px;
+    color: #900603;
+    font-weight: 700;
+    font-size:30px;
+    text-align: center;
+}
+
+.center {
+    margin-left: 20px;
+    height: 40vh;
+    width: 30vw;
+    display: flex;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.center-hide {
+    margin-left: 20px;
+    height: 40vh;
+    width: 30vw;
+    display: none;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.center:hover {
+    transform: scale(1.3);
+}
+
+.center-img {
+    margin-top: 10%;
+    height: 30vh;
+    display: flex;
+}
+
+.center-text{
+    margin-top : 10px;
+    color: #900603;
+    font-weight: 700;
+    font-size:30px;
+    text-align: center;
+}
+
+.right {
+    margin-left: 20px;
+    height: 40vh;
+    width: 20vw;
+    display: flex;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.right-hide {
+    margin-left: 20px;
+    height: 40vh;
+    width: 20vw;
+    display: none;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.right:hover {
+    transform: scale(1.3);
+}
+
+.right-img {
+    height: 18vh;
+    margin-top: 30%;
+    display: flex;
+}
+
+.right-text{
+    margin-top : 10px;
+    color: #900603;
+    font-weight: 700;
+    font-size:30px;
+    text-align: center;
+}
