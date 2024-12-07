@@ -1,0 +1,103 @@
+.controll-container {
+    display: flex;
+    height : 80vh;
+    width : 100vw;
+    background-color: #312e2d;
+    flex-direction: column;
+    margin:0;
+}
+
+.controll-title {
+    color: #900603;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 40px;
+    padding: 3%;
+}
+
+.detail-container {
+    display: flex;
+    margin-left:10vw;
+    margin-right: 10vw;
+    flex-direction: column;
+    align-items: center;
+}
+
+.battle-container {
+    display: flex;
+    flex-direction: column;
+    width: 70vw;
+    height: 50vh;
+}
+
+.battle-container-1p {
+    display: flex;
+    flex-direction: row;
+    width: 70vw;
+    height: 23vh;
+}
+
+.battle-container-2p {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 70vw;
+    height: 23vh;
+}
+
+.magic {
+    width: 30%;
+    height: 80%;
+}
+
+.key-container {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 35%;
+    height: 80%;
+}
+
+.VS {
+    display: flex;
+    color: #900603;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 30px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.magic-2p {
+    width: 30%;
+    height: 80%;
+    transform: rotateY(180deg)
+}
+
+.key-container-2p {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 35%;
+    height: 80%;
+}
+
+.player-text {
+    color: #900603;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 30px;
+    width: 5vw;
+    padding-right: 10vw;
+}
+
+.player-text-2 {
+    color: #900603;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 30px;
+    width: 5vw;
+    padding-left: 10vw;
+    display: flex;
+    flex-direction: column-reverse;
+}

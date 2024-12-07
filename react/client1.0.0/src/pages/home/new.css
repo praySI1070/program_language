@@ -1,0 +1,205 @@
+
+
+.new-container {
+    display: flex;
+    height : 100vh;
+    width : 100vw;
+    background-color: #312e2d;
+    margin:0;
+    flex-direction: column;
+}
+.new-title {
+    margin-top: 10px;
+    color: #900603;
+    font-weight: 800;
+    text-decoration: none;
+    font-size: 40px;
+    padding: 3%;
+}
+
+.new-title-detail-container {
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+
+
+.text-modal {
+    display: flex;
+    margin-left: 10vw;
+    width: 80vw;
+    height: 70vh;
+    background-color: #420e2c;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2rem;
+}
+
+.modal-title {
+    width: 70vw;
+    margin-top: 0.5vh;
+    height:5vh;
+    margin-left: 4vw;
+    text-align: center;
+    background-color: #312e2d;
+    font-size: 30px;
+    font-weight: 800;
+    border-radius: 2rem;
+}
+
+.title-contaier {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-detail {
+    
+    width: 70vw;
+    height:60vh;
+    background-color: rgb(121, 121, 121);
+    border-radius: 1rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    align-items: center;
+    justify-content: center;
+}
+.modal-detail-text {
+    display: inline-block;
+    margin-left: 1vw;
+    margin-top:1vh;
+    width: 68vw;
+    height:58vh;
+    word-wrap: break-word;
+    overflow: scroll;
+    border: 1px solid black;
+    flex-direction: column;
+}
+
+.close-modal {
+    width: 30px;
+    height: 30px;
+    margin-left: 2vw;
+    position: flex;
+    font-weight: 800;
+    border-radius: 10px;
+    background-color: #420e2c;
+}
+
+.left {
+    margin-left: 20px;
+    height: 40vh;
+    width: 20vw;
+    display: flex;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.left-hide {
+    margin-left: 20px;
+    height: 40vh;
+    width: 20vw;
+    display: none;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.left:hover {
+    transform: scale(1.3);
+}
+
+.left-img {
+    margin-top: 30%;
+    height: 18vh;
+    display: flex;
+}
+
+.left-text{
+    margin-top : 10px;
+    color: #900603;
+    font-weight: 700;
+    font-size:30px;
+    text-align: center;
+}
+
+.center {
+    margin-left: 20px;
+    height: 40vh;
+    width: 30vw;
+    display: flex;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.center-hide {
+    margin-left: 20px;
+    height: 40vh;
+    width: 30vw;
+    display: none;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.center:hover {
+    transform: scale(1.3);
+}
+
+.center-img {
+    margin-top: 10%;
+    height: 30vh;
+    display: flex;
+}
+
+.center-text{
+    margin-top : 10px;
+    color: #900603;
+    font-weight: 700;
+    font-size:30px;
+    text-align: center;
+}
+
+.right {
+    margin-left: 20px;
+    height: 40vh;
+    width: 20vw;
+    display: flex;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.right-hide {
+    margin-left: 20px;
+    height: 40vh;
+    width: 20vw;
+    display: none;
+    flex-direction: column;
+    /* 부드럽게 움직이는 효과 */
+	transition: 1s;
+}
+
+.right:hover {
+    transform: scale(1.3);
+}
+
+.right-img {
+    height: 18vh;
+    margin-top: 30%;
+    display: flex;
+}
+
+.right-text{
+    margin-top : 10px;
+    color: #900603;
+    font-weight: 700;
+    font-size:30px;
+    text-align: center;
+}
