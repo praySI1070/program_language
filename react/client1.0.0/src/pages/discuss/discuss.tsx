@@ -33,7 +33,7 @@ export default function Discuss() {
         const id = idd?.value;
 
         try {
-            const response = await fetch(`http://${REACT_APP_API_URL}/discuss`, {
+            const response = await fetch(`http://${REACT_APP_API_URL}/discuss/GetInfo`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -53,6 +53,8 @@ export default function Discuss() {
 
     useEffect(() => {
         GetFqa(); // useEffect 안에서 함수 호출
+
+        window.scrollTo(0, 0);
         
     }, []); // 빈 배열로 useEffect가 한 번만 실행되도록 설정
 
@@ -80,13 +82,14 @@ export default function Discuss() {
             alert("로그인 해주세요.");
             return;
         }
+        console.log(userId);
         try {
             await fetch(`http://${REACT_APP_API_URL}/discussInput`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({fqaDetail}),
+                body: JSON.stringify({fqaDetail, userId}),
                 credentials: 'include'
             })
              .then(res=>res.json())

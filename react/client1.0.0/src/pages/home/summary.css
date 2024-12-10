@@ -49,4 +49,6 @@ video {
     text-decoration: none;
     font-weight: 800;
     font-size: 17px;
+    max-height: 80vh;
+    overflow: auto;
 }

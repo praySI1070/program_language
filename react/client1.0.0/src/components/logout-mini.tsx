@@ -33,7 +33,13 @@ export default function LogOutMini() {
 
     // 회원탈퇴 처리 (추가 구현 필요)
     const MemberOut = async () => {
-        let test = false;
+        // eslint-disable-next-line no-restricted-globals
+        let test = await confirm("정말 회원탈퇴를 하시겠습니까?");
+        if(!test) {
+            return;
+        }
+
+
         // 회원탈퇴 API 호출
         await fetch(`http://${REACT_APP_API_URL}/member-out`, {
             method: 'POST',

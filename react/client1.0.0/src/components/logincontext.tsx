@@ -35,6 +35,7 @@ export const useLogIn = () => {
   return useContext(LogInContext);
 };
 
+
 // 5. LogInProvider 컴포넌트 타입 정의
 interface LogInProviderProps {
   children: ReactNode;  // children이 React 노드 타입임을 정의

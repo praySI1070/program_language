@@ -35,6 +35,9 @@ export default function LoginMini() {
                 setUserRank(data.userRank);
                 setUserSignDate(data.userSign);
             }
+            else {
+                alert("아이디 혹은 비밀번호가 틀립니다.")
+            }
         });
     };
 
