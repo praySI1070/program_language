@@ -15,11 +15,11 @@ const expressSession = require('express-session');
 require('dotenv').config();
 const SK = process.env.SK || 'default_value';  // SK가 없으면 'default_value'를 사용
 
-
-app.use(cors({
-  origin: 'http://localhost:3000', // 리액트 클라이언트 주소
-  credentials: true,  // 크로스 오리진 요청에서 쿠키를 전달
-}));
+//리액트랑 쓸때는 써야함
+// app.use(cors({
+//   origin: 'http://localhost:3000', // 리액트 클라이언트 주소
+//   credentials: true,  // 크로스 오리진 요청에서 쿠키를 전달
+// }));
 
 // JSON 파싱을 위한 미들웨어
 app.use(express.json());  // JSON 형식의 요청 본문을 파싱
@@ -44,6 +44,10 @@ app.use(
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.get('/discuss', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
@@ -176,7 +180,9 @@ app.post('/member-out', async (req,res) => {
   });
 })
 
-app.post('/discuss', async (req, res) => {
+
+
+app.post('/discuss/GetInfo', async (req, res) => {
   const result = await SerachDiscuss();
   res.json(result);
 });
@@ -198,10 +204,38 @@ app.post('/discussInput', async (req,res) => {
 });
 
 app.get('/GameDownload', async (req,res) => {
-  const filename = 'Fight_Wizard1.1.zip';
-  res.setHeader('Content-Disposition', `attachment; filename=${filename}`); //  Content-Disposition 헤더를 브라우저가 읽고 다운로드라고 인식
-  res.sendFile("D:\\praySI01\\1.2\\react\\faultless\\server\\GameFile\\Fight_Wizard1.1.zip"); //파일경로
+  const filename = process.env.GAME_FILE_Name;
+  const filePath = process.env.GAME_FILE_PATH;
+
+  if (!filePath) {
+    return res.status(500).json({ error: 'File path is not defined in the environment variables.' });
+  }
+
+  // 파일이 존재하는지 확인 (선택 사항)
+  const fs = require('fs');
+  fs.stat(filePath, (err, stats) => {
+    if (err) {
+      return res.status(404).json({ error: 'File not found.' });
+    }
+
+    res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+    res.setHeader('Content-Length', stats.size);  // 파일 크기 설정 (선택 사항)
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        console.error('File sending error:', err);
+        res.status(500).json({ error: 'File download failed', detail: err });
+      } else {
+        console.log('File sent successfully');
+      }
+    });
+  });
 });
+
+// 모든 요청을 '/'로 리디렉션
+app.all('*', (req, res) => {
+  res.redirect('/');
+});
+
 
 server.listen(port, () =>{
     console.log("서버로 작동");
