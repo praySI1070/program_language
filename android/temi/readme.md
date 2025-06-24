@@ -15,15 +15,18 @@ stt 기능은 https://aiopen.etri.re.kr/ , 자연어 처리 기능은 CHAT-GPT�
 
 시연 영상 링크 : https://youtu.be/n8_gn2C0uM4
 
+
 release version 1.0.1
 
 말풍선 추가로, UX 개선 시도
+
 
 release version 1.0.2
 
 사용자가 말하는 시간이 너무 길어서 더 짧게 변경
 
 질문을 못정하겠다는 분들이 많아서 FQA버튼 제작
+
 
 release version 1.0.3
 
