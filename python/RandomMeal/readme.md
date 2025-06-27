@@ -9,3 +9,5 @@
 크롤링과 pyqt5를 연습하려고 만든 프로그램임.
 
 크롤링한 사이트는 만개의 레시피
+
+시연 영상 : https://youtu.be/YLjd7hiZpfE
