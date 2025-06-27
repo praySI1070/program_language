@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지 사항</title>
+    <style>
+        body {
+           font-family: Arial, sans-serif;
+           margin: 0;
+           padding: 70px 20px 20px; /* 상단에 여백 추가 */
+           background-color: #f2f2f2;
+       }
+
+
+       h1 {
+           font-size: 3em;
+           margin-bottom: 30px;
+           text-align: center;
+       }
+
+
+       .facility-list {
+           position: relative; /* 부모 요소를 relative로 설정 */
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           gap: 15px;
+           max-width: 100%;
+       }
+
+       .facility-wrapper {
+           width: 100%;
+           position: relative;
+       }
+
+
+       .facility-button {
+           position: relative;
+           width: 100%;
+           padding: 35px;
+           margin-bottom:2px;
+           font-size: 1.2em;
+           text-align: center;
+           text-decoration: none;
+           color: white;
+           background-color: #4CAF50;
+           border: 0px solid #24ce2a; /* 테두리 추가 */
+       }
+
+
+       .facility-date-main {
+           position: absolute;
+           top: 70%; /* 부모 요소의 세로 중앙 위치에서부터 상단으로 이동 */
+           left: 50%; /* 부모 요소의 가로 중앙 위치에서부터 왼쪽으로 이동 */
+           transform: translate(-50%, -50%);
+           width: 80%; /* 부모 요소의 80% 크기로 지정 */
+           height: 80%; /* 부모 요소의 80% 크기로 지정 */
+           font-size: 1.2em;
+           color: white;
+           opacity: 0.8;
+           white-space: nowrap; /* 넘친 텍스트를 줄 바꿈하지 않고 보존 */
+           overflow: hidden; /* 넘치는 텍스트를 숨김 */
+           text-overflow: ellipsis; /* 넘친 텍스트에 "..."을 추가하여 표시 */
+           font-weight: bold; /* bold체 처리 */
+       }
+
+       .facility-date-top {
+           position: absolute;
+           top: 0px;
+           left: 2px;
+           font-size: 0.6em;
+           color: white;
+           opacity: 0.8;
+           overflow: visible; /* 글자가 넘칠 때 잘리지 않고 부모 요소의 영역을 벗어나도록 설정 */
+       }
+
+       .facility-date-bottom {
+           position: absolute;
+           bottom: 0px;
+           right: 2px;
+           font-size: 0.6em;
+           color: white;
+           opacity: 0.8;
+           overflow: visible;
+       }
+
+       .facility-button.active {
+            background-color: #1B5E20; /* 활성화 상태일 때의 배경색 */
+        }
+
+        .delete-icon {
+            background-image: url("{{ url_for('static', filename='delete.png') }}"); /* 이미지 경로 설정 */
+            background-size: 20px; /* 이미지 크기 지정 */
+            background-position: center right; /* 이미지 위치 지정 */
+            background-repeat: no-repeat; /* 이미지 반복 설정 */
+
+            /* 이미지의 위치를 왼쪽으로 10px만큼 이동 */
+            background-position: calc(100% - 10px) center;
+        }
+
+
+       .detail-container {
+           margin-bottom: 10px;
+           font-size: 1.2em;
+           text-align: center;
+           background-color: #ffffff;
+           border: 1px solid #ccc;
+           width: 100%;
+           display: none;
+       }
+
+
+       .back-button {
+           padding: 15px;
+           font-size: 1.2em;
+           text-align: center;
+           text-decoration: none;
+           color: white;
+           background-color: #4CAF50;
+           border-radius: 10px;
+           top: 20px;
+           right: 20px;
+       }
+
+
+       .back-button-container {
+           display: flex;
+           gap: 10px;
+           position: fixed;
+           top: 20px;
+           right: 20px;
+       }
+
+       .custom-button {
+            padding: 10px;
+            font-size: 0.5em;
+            background-color: #4CAF50; /* 배경색 지정 */
+            color: white; /* 텍스트 색상 지정 */
+            border: none; /* 테두리 제거 */
+        }
+
+        .bottom-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: flex-end; /* 우측 정렬 */
+            margin-bottom:5px;
+        }
+
+        .modal {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4); /* 검은색 배경에 투명도 추가 */
+        }
+
+        /* 모달 콘텐츠 */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 상단에서 15% 아래로, 수평으로 가운데 정렬 */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* 너비 80% */
+        }
+
+            /* 닫기 버튼 */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none; /* 리스트 스타일 제거 */
+            padding: 0; /* 기본 패딩 제거 */
+        }
+
+        .page-item {
+            margin: 0 2px; /* 좌우 간격 추가 */
+        }
+
+        .page-link {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.7em; /* 글씨 크기 줄이기 */
+        }
+
+        .page-link:hover {
+            background-color: #45a049; /* 호버 시 색상 변경 */
+        }
+
+        .page-item.active .page-link {
+            background-color: #1B5E20;
+        }
+
+
+   </style>
+</head>
+<body>
+    <h1>공지 사항</h1>
+    <div class="back-button-container">
+        <a href="/" class="back-button">메인화면</a>
+    </div>
+
+
+    {% if admin == 1%}
+        <div class="bottom-buttons">
+            <button class="custom-button" onclick="openModal()">추가</button>
+            <button class="custom-button" onclick="window.location.href='/notices-detail-delete'">삭제</button>
+            <button class="custom-button" onclick="checkActiveButton()">수정</button>
+        </div>
+    {% endif %}
+
+    {% if notices %}
+        {% for info in notices %}
+            <div class="facility-list">
+                <div class="facility-wrapper">
+                    <button class="facility-button" onclick="toggleDetail(this, `{{ info['detail'] }}`)">
+                        <span class="facility-date-main">{{ info['title'] }}</span>
+                        <span class="facility-date-top">{{ info['name'] }}</span>
+                        <span class="facility-date-bottom">{{ info['date'] }}</span>
+                    </button>
+                    <div class="detail-container"></div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+    <p>표시할 공지사항이 없습니다.</p>
+    {% endif %}
+
+    
+    <!-- 페이지네이션 -->
+    {% if total_pages > 1 %}
+        <ul class="pagination justify-content-center" style="display: flex; gap: 5px;">
+            {% if page > 1 %}
+                <li class="page-item"><a class="page-link" href="?page=1">⇐</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page-1 }}">←</a></li>
+            {% endif %}
+            {% for num in range(1, total_pages + 1) %}
+                {% if num >= page - 2 and num <= page + 2 %}
+                    <li class="page-item {% if num == page %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page < total_pages %}
+                <li class="page-item"><a class="page-link" href="?page={{ page+1 }}">→</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ total_pages }}">⟹</a></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+
+
+    <!-- 모달 구조 추가 -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">공지사항 추가</h2>
+            <form>
+                <select id="notification-type">
+                    <option value="앱공지">앱공지</option>
+                    {% for info in facilities_info %}
+                        <option value="{{ info }}">{{ info }}</option>
+                    {% endfor %}
+                </select><br>
+                <label for="title">제목</label><br>
+                <input type="text" id="title" name="title" style="width: 80%;"><br>
+                <label for="detail">내용</label><br>
+                <textarea id="detail" name="detail" style="width: 80%; height: 200px;"></textarea><br>
+                <button type="button" id="modal-save-button" onclick="check === 0 ? submitNotice() : submitChangedNotice()">저장</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var check = 0; // 초기값은 추가 모드 (0: 추가, 1: 수정)
+
+        function toggleDetail(element, detail) {
+            const detailContainer = element.nextElementSibling;
+            if (detailContainer.style.display === "none" || detailContainer.style.display === "") {
+                detailContainer.style.display = "block";
+                detailContainer.innerText = detail;
+                element.classList.add('active'); // 버튼에 active 클래스 추가
+            } else {
+                detailContainer.style.display = "none";
+                detailContainer.innerText = "";
+                element.classList.remove('active'); // 버튼에서 active 클래스 제거
+            }
+        }
+        
+        
+
+        // 모달 열기
+        function openModal() {
+            check = 0;
+            document.getElementById("myModal").style.display = "block";
+            document.getElementById("modal-title").textContent = "공지사항 추가";
+            document.getElementById("modal-save-button").textContent = "저장";
+            document.getElementById("notification-type").value = "앱공지"; // 드랍다운 메뉴 설정
+            document.getElementById("title").value = ""; // 제목 입력 필드 설정
+            document.getElementById("detail").textContent = ""; // 내용 입력 필드 설정
+        }
+
+        // 모달 닫기
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none";
+        }
+
+        // 공지사항 제출 (예시)
+        function submitNotice() {
+            // 선택된 값과 입력된 제목, 내용 가져오기
+            var notificationType = document.getElementById("notification-type").value;
+            var title = document.getElementById("title").value;
+            var detail = document.getElementById("detail").value;
+
+            // Ajax 요청 보내기
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/save_notice", true); // POST 요청을 "/save_notice" 라우트로 보냄
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    // 요청이 성공적으로 처리되었을 때의 동작
+                    alert("저장에 성공하였습니다.");
+                    closeModal(); // 모달 닫기
+                    window.location.reload();
+                }
+            };
+            var data = JSON.stringify({ "notification_type": notificationType, "title": title, "detail": detail });
+            xhr.send(data);
+        }
+
+        /*수정*/
+        // 활성화된 버튼의 목록을 반환하는 함수 추가
+        function getActiveButtons() {
+            return Array.from(document.querySelectorAll('.facility-button.active'));
+        }
+
+        // 활성화된 버튼의 목록을 반환하는 함수 추가
+        function checkActiveButton() {
+            const activeButtons = getActiveButtons();
+            if (activeButtons.length === 1) {
+                openModalChanged(activeButtons[0]); // 모달 열기 함수 호출
+            } else {
+                alert("선택된 버튼이 여러개거나 0개입니다.");
+            }
+        }
+        /*수정모드 모달*/
+        function openModalChanged(activeButton) {
+            check = 1;
+            const title = activeButton.querySelector('.facility-date-top').textContent;
+            const name = activeButton.querySelector('.facility-date-main').textContent;
+            const date = activeButton.querySelector('.facility-date-bottom').textContent;
+
+            const detailText = activeButton.nextElementSibling.innerText.trim();
+            // 모달 내용 채우기
+            document.getElementById("myModal").style.display = "block";
+            document.getElementById("modal-title").textContent = "공지사항 수정";
+            document.getElementById("modal-save-button").textContent = "수정";
+            document.getElementById("notification-type").value = title; // 드랍다운 메뉴 설정
+            document.getElementById("title").value = name; // 제목 입력 필드 설정
+            document.getElementById("detail").textContent = detailText; // 내용 입력 필드 설정
+
+            // 저장 버튼 클릭 시 수정된 내용 제출
+            document.getElementById("modal-save-button").onclick = function() {
+                submitChangedNotice();
+            };
+        }
+
+        function submitChangedNotice() {
+            // 선택된 값과 입력된 제목, 내용 가져오기
+            var notificationType = document.getElementById("notification-type").value;
+            var title = document.getElementById("title").value;
+            var detail = document.getElementById("detail").value;
+
+             // 선택된 버튼의 date 값 가져오기
+            var date = document.querySelector('.facility-button.active .facility-date-bottom');
+            var dateText = date ? date.textContent : ""; // 선택된 버튼이 있는 경우에만 date 값을 가져옴
+
+            // Ajax 요청 보내기
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/update_notice", true); // POST 요청을 "/update_notice" 라우트로 보냄
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    // 요청이 성공적으로 처리되었을 때의 동작
+                    alert("수정에 성공하였습니다.");
+                    closeModal(); // 모달 닫기
+                    window.location.reload();
+                }
+            };
+            var data = JSON.stringify({ "notification_type": notificationType, "title": title, "detail": detail, "date": dateText });
+            xhr.send(data);
+        }
+    </script>
+</body>
+</html>

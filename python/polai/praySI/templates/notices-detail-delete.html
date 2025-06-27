@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지 사항</title>
+    <style>
+        body {
+           font-family: Arial, sans-serif;
+           margin: 0;
+           padding: 70px 20px 20px; /* 상단에 여백 추가 */
+           background-color: #f2f2f2;
+       }
+
+
+       h1 {
+           font-size: 3em;
+           margin-bottom: 30px;
+           text-align: center;
+       }
+
+
+       .facility-list {
+           position: relative; /* 부모 요소를 relative로 설정 */
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           gap: 15px;
+           max-width: 100%;
+       }
+
+       .facility-wrapper {
+           width: 100%;
+           position: relative;
+       }
+
+       .facility-checkbox {
+            width: 25px;
+            height: 25px;
+            margin-right: 10px; /* 버튼과 체크박스 사이의 간격 조정 */
+
+        }
+
+        
+
+
+       .facility-button {
+           position: relative;
+           width: calc(100% - 43.5px);
+           padding: 35px;
+           margin-bottom:2px;
+           font-size: 1.2em;
+           text-align: center;
+           text-decoration: none;
+           color: white;
+           background-color: #4CAF50;
+           border: 0px solid #24ce2a; /* 테두리 추가 */
+       }
+
+
+       .facility-date-main {
+           position: absolute;
+           top: 70%; /* 부모 요소의 세로 중앙 위치에서부터 상단으로 이동 */
+           left: 50%; /* 부모 요소의 가로 중앙 위치에서부터 왼쪽으로 이동 */
+           transform: translate(-50%, -50%);
+           width: 80%; /* 부모 요소의 80% 크기로 지정 */
+           height: 80%; /* 부모 요소의 80% 크기로 지정 */
+           font-size: 1.2em;
+           color: white;
+           opacity: 0.8;
+           white-space: nowrap; /* 넘친 텍스트를 줄 바꿈하지 않고 보존 */
+           overflow: hidden; /* 넘치는 텍스트를 숨김 */
+           text-overflow: ellipsis; /* 넘친 텍스트에 "..."을 추가하여 표시 */
+           font-weight: bold; /* bold체 처리 */
+       }
+
+       .facility-date-top {
+           position: absolute;
+           top: 0px;
+           left: 2px;
+           font-size: 0.6em;
+           color: white;
+           opacity: 0.8;
+           overflow: visible; /* 글자가 넘칠 때 잘리지 않고 부모 요소의 영역을 벗어나도록 설정 */
+       }
+
+       .facility-date-bottom {
+           position: absolute;
+           bottom: 0px;
+           right: 2px;
+           font-size: 0.6em;
+           color: white;
+           opacity: 0.8;
+           overflow: visible;
+       }
+
+       .facility-button.active {
+            background-color: #1B5E20; /* 활성화 상태일 때의 배경색 */
+        }
+
+        .delete-icon {
+            background-image: url("{{ url_for('static', filename='delete.png') }}"); /* 이미지 경로 설정 */
+            background-size: 40px; /* 이미지 크기 지정 */
+            background-position: center right; /* 이미지 위치 지정 */
+            background-repeat: no-repeat; /* 이미지 반복 설정 */
+
+            /* 이미지의 위치를 왼쪽으로 10px만큼 이동 */
+            background-position: calc(100%) center;
+        }
+
+
+       .detail-container {
+           margin-bottom: 10px;
+           font-size: 1.2em;
+           text-align: center;
+           background-color: #ffffff;
+           border: 1px solid #ccc;
+           margin-left: 43.5px;
+           width: calc(100% - 42px);
+           display: none;
+       }
+
+
+       .back-button {
+           padding: 15px;
+           font-size: 1.2em;
+           text-align: center;
+           text-decoration: none;
+           color: white;
+           background-color: #4CAF50;
+           border-radius: 10px;
+           top: 20px;
+           right: 20px;
+       }
+
+
+       .back-button-container {
+           display: flex;
+           gap: 10px;
+           position: fixed;
+           top: 20px;
+           right: 20px;
+       }
+
+       .custom-button {
+            padding: 10px;
+            font-size: 0.5em;
+            background-color: #4CAF50; /* 배경색 지정 */
+            color: white; /* 텍스트 색상 지정 */
+            border: none; /* 테두리 제거 */
+        }
+
+        .bottom-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: flex-end; /* 우측 정렬 */
+            margin-bottom:5px;
+        }
+
+        .custom-checkbox {
+            width: 25px;
+            height: 25px;
+            margin-right: calc(100% - 120px); /* 버튼과 체크박스 사이의 간격 조정 */
+
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none; /* 리스트 스타일 제거 */
+            padding: 0; /* 기본 패딩 제거 */
+        }
+
+        .page-item {
+            margin: 0 2px; /* 좌우 간격 추가 */
+        }
+
+        .page-link {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.7em; /* 글씨 크기 줄이기 */
+        }
+
+        .page-link:hover {
+            background-color: #45a049; /* 호버 시 색상 변경 */
+        }
+
+        .page-item.active .page-link {
+            background-color: #1B5E20;
+        }
+
+   </style>
+</head>
+<body>
+    <h1>공지 사항</h1>
+    <div class="back-button-container">
+        <a href="/" class="back-button">메인화면</a>
+    </div>
+
+
+    
+    <div class="bottom-buttons">
+        <!-- 상단 체크박스 -->
+        <input type="checkbox" class="custom-checkbox" id="select-all" data-index="all">
+        <button class="custom-button" onclick="confirmtest()">삭제</button>
+        <button class="custom-button" onclick="window.location.href='/notices'">취소</button>
+    </div>
+
+    {% if notices %}
+        <div class="facility-list">
+            <div class="facility-wrapper">
+            {% for info in notices %}
+                <div class="facility-wrapper">
+                    <input type="checkbox" class="facility-checkbox" data-index="{{ loop.index }}">
+                    <button class="facility-button" onclick="toggleDetail(this, `{{ info['detail'] }}`)">
+                        <span class="facility-date-main">{{ info['title'] }}</span>
+                        <span class="facility-date-top">{{ info['name'] }}</span>
+                        <span class="facility-date-bottom">{{ info['date'] }}</span>
+                    </button>
+                    <div class="detail-container"></div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <p>표시할 공지사항이 없습니다.</p>
+    {% endif %}
+
+    <!-- 페이지네이션 -->
+    <!-- 페이지네이션 -->
+    {% if total_pages > 1 %}
+        <ul class="pagination justify-content-center" style="display: flex; gap: 5px;">
+            {% if page > 1 %}
+                <li class="page-item"><a class="page-link" href="?page=1">⇐</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ page-1 }}">←</a></li>
+            {% endif %}
+            {% for num in range(1, total_pages + 1) %}
+                {% if num >= page - 2 and num <= page + 2 %}
+                    <li class="page-item {% if num == page %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            {% if page < total_pages %}
+                <li class="page-item"><a class="page-link" href="?page={{ page+1 }}">→</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ total_pages }}">⟹</a></li>
+            {% endif %}
+        </ul>
+    {% endif %}
+
+    <script>
+        function toggleDetail(element, detail) {
+            const detailContainer = element.nextElementSibling;
+            if (detailContainer.style.display === "none" || detailContainer.style.display === "") {
+                detailContainer.style.display = "block";
+                detailContainer.innerText = detail;
+                element.classList.add('active'); // 버튼에 active 클래스 추가
+            } else {
+                detailContainer.style.display = "none";
+                detailContainer.innerText = "";
+                element.classList.remove('active'); // 버튼에서 active 클래스 제거
+            }
+        }
+        
+        /*체크박스*/
+        /* 체크박스 관련 수정 */
+        document.getElementById('select-all').addEventListener('change', function() {
+            var checkboxes = document.querySelectorAll('.facility-checkbox');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = this.checked;
+            }, this);
+        });
+
+        
+
+        function confirmtest() {
+            if (confirm("정말 삭제 하시겠습니까?")) {
+                var checkboxes = document.querySelectorAll('.facility-checkbox');
+                var dates = [];
+
+                checkboxes.forEach(function(checkbox) {
+                    if (checkbox.checked) {
+                        var dateElement = checkbox.nextElementSibling.querySelector('.facility-date-bottom');
+                        dates.push(dateElement.textContent.trim());
+                    }
+                });
+
+                // 서버로 POST 요청 보내기
+                fetch('/delete_notices', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ dates: dates })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // 서버 응답 처리
+                    console.log(data);
+                    // 페이지 새로고침 또는 삭제된 항목 UI 업데이트 등의 추가 작업 수행
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

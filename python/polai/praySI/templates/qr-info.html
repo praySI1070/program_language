@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>qr정보</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .info-box {
+            width: 80%;
+            height: 80%;
+            background: #fff;
+            box-shadow: 0 10px 100px #4CAF50;
+            border-radius: 10px;
+            padding: 3%;
+            overflow-y: auto; /* 스크롤 활성화 */
+        }
+        h2 {
+            font-size: 2em;
+            text-align: center;
+        }
+        .back-button {
+            display: block;
+            position: absolute;
+            top: 15px; /* 원하는 높이 조정 */
+            right: 15px; /* 원하는 우측 여백 조정 */
+            padding: 3% 5%;
+            font-size: 1.5em;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            border-radius: 20px;
+        }
+        details {
+            margin-bottom: 20px;
+        }
+        .button {
+            width: 100%;
+            padding: 25px;
+            font-size: 1.8em;
+            margin-bottom: 2%;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            border-radius: 200px;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .facility-details {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .facility-info {
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .facility-info strong {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .facility-info p {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .qr-images {
+            display: none;
+            margin-left: 20px;
+        }
+        details[open] .qr-images {
+            display: block;
+        }
+        .qr-images img {
+            max-width: 100px;
+            margin: 5px;
+        }
+    </style>
+    <a href="/mypage" class="back-button">뒤로가기</a>
+</head>
+<body>
+    <div class="info-box">
+        <h2>예약 확인</h2>
+        {% for i in range(0, qr_images|length) %}
+        <details>
+            <summary class="button">{{ facility_name[i] }}</summary>
+            <div class="facility-details">
+                {% if facility_name[i] in qr_info %}
+                <div class="facility-info">
+                    <strong>{{ facility_name[i] }}</strong>
+                    <p>팀임</p>
+                    <p>구매날짜 : {{ qrall[i][4] }}</p>
+                    <p>예약 체크인 : {{ qrall[i][5] }}</p>
+                    <p>체크아웃 : {{ qrall[i][6] }}</p>
+                </div>
+                {% else %}
+                <div class="facility-info">
+                    <strong>{{ facility_name[i] }}</strong>
+                    <p>팀이아님</p>
+                    <p>구매날짜 : {{ qrall[i][4] }}</p>
+                    <p>사용 가능 시간 : 입장부터 {{ qrall[i][3] }}시간</p>
+                </div>
+                {% endif %}
+                <div class="qr-images">
+                    <p><img src="{{ url_for('static', filename='images/' ~ qr_images[i] ~ '.png') }}"></p>
+                </div>
+            </div>
+        </details>
+        {% endfor %}
+    </div>
+</body>
+</html>
