@@ -1,0 +1,114 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+            alert("{{messages[-1]}}")
+        </script>
+    {% endif %}
+{% endwith %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        /* .login-box {
+            width: 300px;
+            padding: 40px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            text-align: center;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+        } */
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 20%;
+            color: #333;
+        }
+        .login-box input {
+            display:flex;
+            width: 90%;
+            padding: 5%;
+            margin-bottom: 20px;
+            border: none;
+            border-bottom: 1px solid #333;
+            outline: none;
+            background: transparent;
+            color: #333;
+            font-size: 16px;
+        }
+        .login-box button {
+            text-align: right;
+            width: 100%;
+            padding: 6%;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            background: #4CAF50;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 10px;
+        }
+        .login-box a {
+            display: block;
+            margin: 10px 10px;
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .login-box a:hover {
+            text-decoration: underline;
+        }
+        .back-button {
+            display: block;
+            position: absolute;
+            top: 15px; /* 원하는 높이 조정 */
+            right: 15px; /* 원하는 우측 여백 조정 */
+            padding: 20px 30px;
+            font-size: 1.5em;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            border-radius: 20px;
+        }
+        .error {
+            color: red;
+            margin-bottom: 20px;
+        }
+        .success {
+            color: rgb(0, 47, 255);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-button">메인화면</a>
+    <div class="login-box">
+        <h1>Login</h1>
+        {% if error %}
+            <p class="success">{{ error }}</p>
+        {% endif %}
+        <form method="post" action="/login">
+            <input type="text" name="username" placeholder="ID" required>
+            <input type="password" name="password" placeholder="PW" required>
+            <button type="submit">로그인</button>
+            <a href="/forgot-id-pw">ID 혹은 PW 찾기</a>
+            <a href="/signup">회원가입</a>
+        </form>
+    </div>
+</body>
+</html>

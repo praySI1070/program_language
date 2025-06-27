@@ -1,0 +1,96 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+            alert("{{messages[-1]}}")
+        </script>
+    {% endif %}
+{% endwith %}
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ facility[1] }}</title>
+    <style>
+body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+        h1 {
+            font-size: 260%;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .facility-detail {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .facility-description {
+            font-size: 1.2em;
+            color: #666;
+        }
+        .back-button {
+            display: block;
+            margin-top: 20px;
+            margin: 10px;
+            padding: 20px;
+            font-size: 1.5em;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            border-radius: 20px;
+        }
+        .back-button-container {
+            display: flex;
+        }
+        .qr-images{
+        
+        }
+
+    </style>
+</head>
+<body>
+    <h1>{{ facility[1] }}</h1>
+    <div class="facility-detail">
+        <div class="qr-images">
+            <p><img src="{{ url_for('static', filename='im/' ~ facility[0] ~ '.png') }}"
+                style="width:100%; height:100%;"></p>
+        </div>
+            <p><strong>시설 이름 : </strong> {{ facility[1] }}</p>
+        <p><strong>시설 주소 : </strong> {{ facility[2] }}</p>
+        <p><strong>시설 전화번호 : </strong>
+            {% if facility[3] %}
+                {{ facility[3] }}
+            {% else %}
+                번호 없음
+            {% endif %}
+            </p>
+        <p><strong>사용 가능한 시설 : </strong>
+            {% for item in facility[4:8] %}
+                {% if item %}
+                    <span>{{ item }}</span>
+                {% endif %}
+            {% endfor %}
+            </p>
+    <div class = "back-button-container">
+        <a href="/" class="back-button">메인화면</a>
+        <a href="/facility-info" class="back-button">돌아가기</a>
+    </div>
+</body>
+</html>

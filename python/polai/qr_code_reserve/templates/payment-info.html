@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>qr정보</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .info-box {
+            width: 80%; /* 고정 너비 */
+            height: 80%; /* 고정 높이 */
+            background: #fff;
+            box-shadow: 0 10px 100px #4CAF50;
+            border-radius: 10px;
+            padding: 3%;
+        }
+        h2, h3 {
+            text-align: center;
+        }
+        .back-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 20px 30px;
+            font-size: 1.5em;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            border-radius: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .pagination a, .pagination span {
+            margin: 1% 1%;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            border-radius: 5px;
+        }
+        .pagination a:hover {
+            background-color: #45a049;
+        }
+        .pagination .disabled, .pagination .active {
+            background-color: #cccccc;
+            pointer-events: none;
+        }
+    </style>
+    <a href="/mypage" class="back-button">뒤로가기</a>
+</head>
+<body>
+    <div class="info-box">
+        <h2>결제내역</h2>
+        <h2>총 결제 금액 : {{ pay_sum }} 원</h2>
+        <h2>세부 결제 내역 :</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>장소</th>
+                    <th>시간</th>
+                    <th>이용 시간</th>
+                    <th>가격</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payment_detail %}
+                <tr>
+                    <td>{{ payment[7] }}</td>
+                    <td>{{ payment[4].strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                    <td>{{ payment[3] }}시간</td>
+                    <td>{{ payment[10] }}원</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagination">
+            {% if page > 1 %}
+            <a href="?page=1">처음</a>
+            <a href="?page={{ page - 1 }}">이전</a>
+            {% else %}
+            <span class="disabled">처음</span>
+            <span class="disabled">이전</span>
+            {% endif %}
+
+            {% for p in range(1, (total_count // per_page) + 2) %}
+                {% if p == page %}
+                <span class="active">{{ p }}</span>
+                {% else %}
+                <a href="?page={{ p }}">{{ p }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if total_count > page * per_page %}
+            <a href="?page={{ page + 1 }}">다음</a>
+            <a href="?page={{ (total_count // per_page) + 1 }}">마지막</a>
+            {% else %}
+            <span class="disabled">다음</span>
+            <span class="disabled">마지막</span>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,215 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+            alert("{{messages[-1]}}")
+        </script>
+    {% endif %}
+{% endwith %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .info-box {
+            width: 80%;
+            height: 80%;
+            padding: 3%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            box-shadow: 0 10px 100px #4CAF50;
+            border-radius: 10px;
+        }
+        .info-box2 {
+            width: 80%;
+            height: 80%;
+            padding: 3%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            box-shadow: 0 10px 100px #00000063;
+            border-radius: 10px;
+        }
+        h1 {
+            margin-top: 1%;
+            font-size: 1000%;
+        }
+        p {
+            font-size: 400%;
+            text-align: left;
+        }
+        .back-button {
+            display: block;
+            position: absolute;
+            top: 15px; /* 원하는 높이 조정 */
+            right: 15px; /* 원하는 우측 여백 조정 */
+            padding: 3% 5%;
+            font-size: 1.5em;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            border-radius: 20px;
+        }
+        .info-box3 {
+            display: grid;
+            top: 80%;
+            grid-template-columns: 3fr;
+            gap: 10px;
+            width: 100%;
+            top: 50%;
+            left: 50%;
+            background-color: white;
+        }
+        .button2 {
+            text-align:center;
+            font-size: 3em;
+            padding: 4% 25%;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            border-radius: 10px;
+        }
+        .qr-images {
+            margin-top: 20px;
+        }
+        .qr-images img {
+            max-width: 100px;
+            margin: 5px;
+        }
+    </style>
+    <a href="/" class="back-button">뒤로가기</a>
+</head>
+<body>
+    <div class="info-box">
+        <h1>회원 정보</h1>
+        <p><strong>아이디 : </strong></p>
+        <p>{{ mypage_info[1] }}</p>
+        <p><strong>성함 : </strong> {{ mypage_info[3] }}</p>
+        <p><strong>전화번호 : </strong> {{ mypage_info[4] }}</p>
+        <p><strong>생일 : </strong> {{ mypage_info[5] }}</p>
+</body>
+<div class="info-box3">
+    <a href="/qr-info" class="button2">QR예약확인</a>
+    <a href="/payment-info" class="button2" >결제내역</a>
+    <a href="/delete-account" class="button2">회원탈퇴</a>
+</div>
+</html>
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f7;
+            color: #333;
+        }
+        .info-box {
+            width: 95%;
+            height: 95%;
+            background: #fff;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+        .info-box h1 {
+            text-align: center;
+            font-size: 50vh;
+            color: #1d1d1f;
+        }
+        .info-box p {
+            margin: 10px 0;
+            font-size: 1.3em;
+            color: #6e6e73;
+        }
+        .info-box p strong {
+            font-weight: bold;
+            color: #1d1d1f;
+        }
+        .info-box3 {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+        .button2 {
+            display: block;
+            width: 30%;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: #0071e3;
+            border: 2px solid #0071e3;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-size: 1.2em;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .button2:hover {
+            background-color: #0071e3;
+            color: #fff;
+        }
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .info-section div {
+            width: 48%;
+            padding: 20px;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+        }
+        .info-section div h1 {
+            text-align: center;
+            font-size: 2em;
+            margin: 0;
+            color: #1d1d1f;
+        }
+    </style>
+</head>
+<body>
+    <div class="info-box">
+        <div class="info-section">
+            <div>
+                <h1>회원<br>정보</h1>
+            </div>
+            <div>
+                <p><strong>아이디 :</strong> {{ mypage_info[1] }}</p>
+                <p><strong>성함 :</strong> {{ mypage_info[3] }}</p>
+                <p><strong>전화번호 :</strong> {{ mypage_info[4] }}</p>
+                <p><strong>생일 :</strong> {{ mypage_info[5] }}</p>
+            </div>
+        </div>
+        <div class="info-box3">
+            <a href="/qr-info" class="button2">QR확인</a>
+            <a href="/payment-info" class="button2">결제내역</a>
+            <a href="/delete-account" class="button2">회원탈퇴</a>
+        </div>
+    </div>
+</body>
+</html> -->

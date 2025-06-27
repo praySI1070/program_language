@@ -1,0 +1,95 @@
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <script>
+            alert("{{messages[-1]}}")
+        </script>
+    {% endif %}
+{% endwith %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>입장권 발급</title>
+    <style>
+        body {
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 70px 20px 20px; /* 상단에 여백 추가 */
+    background-color: #f2f2f2;
+    }
+
+
+    h1 {
+        margin: 0;
+        padding: 0;
+        font-size: 3em; /* 폰트 크기 */
+        margin-bottom: 30px;
+        max-width: 100%;
+        color: #333;
+    }
+
+
+    .facility-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+        max-width: 600px;
+    }
+
+
+    .facility-button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        font-size: 1.2em;
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        background-color: #4CAF50;
+        border-radius: 30px; /* 동그라미 */
+        margin-bottom: 5px;
+        box-sizing: border-box;
+    }
+
+
+    .back-button {
+        padding: 15px;
+        font-size: 1.2em;
+        text-align: center;
+        text-decoration: none;
+        color: white;
+        background-color: #4CAF50;
+        border-radius: 10px;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+    }
+
+
+    .back-button-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    </style>
+    <h1>입장권 발급</h1>
+    <a href="/" class="back-button">메인화면</a>
+</head>
+<body>
+    <div class="facility-list">
+        {% for facility in facilities %}
+            <a href="/facility-ticket/{{ facility[0] }}" class="facility-button">{{ facility[1] }}</a>
+            <!-- <button onclick="location.href='/facility-ticket/{{ facility[0] }}'"> -->
+            {{ facility['facilities'] }}
+            <!-- <a href="/facility-ticket/{{ facility[0] }}" class="facility-button">{{ facility[1] }}</a> -->
+        {% endfor %}
+    </div>
+</body>
+</html>
