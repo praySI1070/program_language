@@ -1,0 +1,1117 @@
+<x-app-layout>
+    <script src="{{ asset('/js/jszip.min.js') }}"></script>
+    <!--pray 라이브러리설치-->
+    <script src="https://unpkg.com/konva@10/konva.min.js"></script>
+    <div class="py-12 px-3">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="container mx-auto px-4 py-8 max-w-6xl">
+                <header class="text-center mb-12">
+                    <h1 class="text-4xl font-bold text-gray-800 mb-4">📸 썸네일 편집기</h1>
+                    <p class="text-lg text-gray-600">무료 온라인 이미지 리사이즈 도구 - 드래그 앤 드롭으로 쉽게 썸네일 생성</p>
+                </header>
+
+                <main class="space-y-8">
+                    <!-- 파일 업로드 섹션 -->
+                    <section class="bg-white rounded-lg shadow-lg p-6" aria-labelledby="upload-heading">
+                        <h2 id="upload-heading" class="sr-only">이미지 업로드</h2>
+                        <div class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 transition-colors cursor-pointer" id="uploadArea" role="button" aria-label="이미지 파일 업로드 영역">
+                            <div class="upload-content">
+                                <div class="text-6xl mb-4" role="img" aria-label="폴더 아이콘">📁</div>
+                                <h3 class="text-xl font-semibold text-gray-700 mb-2">이미지 파일을 드래그하거나 클릭하여 업로드</h3>
+                                <p class="text-gray-500 mb-4">JPG, PNG, GIF, WebP 파일을 지원합니다</p>
+                                <input type="file" name="files[]" id="fileInput" multiple accept="image/*" class="hidden" aria-label="이미지 파일 선택">
+                                <button class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg transition-colors" id="uploadBtn" aria-label="파일 선택 버튼">
+                                    파일 선택
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 사이즈 설정 섹션 -->
+                    <section class="bg-white rounded-lg shadow-lg p-6" aria-labelledby="resize-heading">
+                        <h2 id="resize-heading" class="text-xl font-semibold text-gray-800 mb-6">리사이즈 설정</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                            <div class="space-y-2">
+                                <label for="width" class="block text-sm font-medium text-gray-700">너비 (px)</label>
+                                <input type="number" id="width" value="1000" min="1" max="4000" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" aria-describedby="width-help">
+                                <span id="width-help" class="sr-only">이미지의 너비를 픽셀 단위로 입력하세요</span>
+                            </div>
+                            <div class="space-y-2">
+                                <label for="height" class="block text-sm font-medium text-gray-700">높이 (px)</label>
+                                <input type="number" id="height" value="1000" min="1" max="4000" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" aria-describedby="height-help">
+                                <span id="height-help" class="sr-only">이미지의 높이를 픽셀 단위로 입력하세요</span>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="flex items-center space-x-2 cursor-pointer">
+                                    <input type="checkbox" id="maintainRatio" checked class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" aria-describedby="ratio-help">
+                                    <span class="text-sm font-medium text-gray-700">비율 유지</span>
+                                </label>
+                                <span id="ratio-help" class="sr-only">체크하면 원본 이미지의 가로세로 비율을 유지합니다</span>
+                                <fieldset class="space-y-2">
+                                    <legend class="text-sm font-medium text-gray-700">리사이즈 모드</legend>
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="radio" name="resizeMode" value="crop" checked class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600">크롭 (가운데 정렬)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="radio" name="resizeMode" value="stretch" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600">늘이기</span>
+                                    </label>
+                                </fieldset>
+                            </div>
+                            <div class="space-y-3">
+                                <fieldset class="space-y-2">
+                                    <legend class="text-sm font-medium text-gray-700">이미지 품질</legend>
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="radio" name="imageQuality" value="high" checked class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600">고품질 (PNG)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="radio" name="imageQuality" value="web" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600">웹용 (JPG 80%)</span>
+                                    </label>
+                                    <label class="flex items-center space-x-2 cursor-pointer">
+                                        <input type="radio" name="imageQuality" value="optimized" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500">
+                                        <span class="text-xs text-gray-600">최적화 (JPG 60%)</span>
+                                    </label>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="border-t pt-6">
+                            <h3 class="text-lg font-medium text-gray-800 mb-4">프리셋 크기</h3>
+                            <div class="flex flex-wrap gap-2" role="group" aria-label="프리셋 크기 버튼들">
+                                <button class="preset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors" data-width="150" data-height="150" aria-label="150x150 픽셀로 설정">150x150</button>
+                                <button class="preset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors" data-width="300" data-height="300" aria-label="300x300 픽셀로 설정">300x300</button>
+                                <button class="preset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors" data-width="500" data-height="500" aria-label="500x500 픽셀로 설정">500x500</button>
+                                <button class="preset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors" data-width="1000" data-height="1000" aria-label="1000x1000 픽셀로 설정">1000x1000</button>
+                                <button class="preset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors" data-width="1920" data-height="1080" aria-label="1920x1080 픽셀로 설정">1920x1080</button>
+                                <button class="preset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-lg transition-colors" data-width="1280" data-height="720" aria-label="1280x720 픽셀로 설정">1280x720</button>
+                            </div>
+                        </div>
+                    </section>
+                    <!--pray 스크롤 앵커-->
+                    <div id="test"></div>
+                    <!-- 이미지 미리보기 및 처리 섹션 -->
+                    <section class="bg-white rounded-lg shadow-lg p-6 hidden" id="previewSection" aria-labelledby="preview-heading">
+                        <h2 id="preview-heading" class="text-xl font-semibold text-gray-800 mb-6">업로드된 이미지</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6" id="imagesGrid" role="grid" aria-label="업로드된 이미지 목록"></div>
+                        <div class="flex flex-wrap gap-3 justify-center" role="group" aria-label="이미지 처리 버튼들">
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg transition-colors" id="resizeBtn" aria-label="모든 이미지를 설정된 크기로 리사이즈">모든 이미지 리사이즈</button>
+                            <button class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg transition-colors hidden" id="downloadAllBtn" aria-label="모든 리사이즈된 이미지를 ZIP 파일로 다운로드">ZIP으로 다운로드</button>
+                            <button class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-lg transition-colors" id="clearBtn" aria-label="모든 이미지 삭제">모두 지우기</button>
+                        </div>
+                    </section>
+
+                    <!-- 처리된 이미지 섹션 -->
+                    <section class="bg-white rounded-lg shadow-lg p-6 hidden" id="processedSection" aria-labelledby="processed-heading">
+                        <h2 id="processed-heading" class="text-xl font-semibold text-gray-800 mb-6">리사이즈된 이미지</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="processedGrid" role="grid" aria-label="리사이즈된 이미지 목록"></div>
+                    </section>
+                </main>
+            </div>
+
+            <!-- 이미지 미리보기 모달 -->
+            <div id="imagePreviewModal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+                <div class="bg-white rounded-lg p-6 max-w-4xl max-h-[90vh] overflow-auto m-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 id="modal-title" class="text-xl font-semibold text-gray-800">이미지 미리보기</h3>
+                        <button id="closeModal" class="text-gray-500 hover:text-gray-700 text-2xl font-bold" aria-label="미리보기 닫기">
+                            ×
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="text-center">
+                            <h4 class="text-lg font-medium text-gray-700 mb-3">원본 이미지</h4>
+                            <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                                <img id="originalPreview" src="" alt="원본 이미지" class="max-w-full max-h-64 mx-auto object-contain">
+                                <p id="originalInfo" class="text-sm text-gray-600 mt-2"></p>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <h4 class="text-lg font-medium text-gray-700 mb-3">리사이즈된 이미지</h4>
+                            <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                                <img id="resizedPreview" src="" alt="리사이즈된 이미지" class="max-w-full max-h-64 mx-auto object-contain">
+                                <p id="resizedInfo" class="text-sm text-gray-600 mt-2"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex justify-center space-x-4">
+                        <button id="downloadPreviewImage" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                            이 이미지 다운로드
+                        </button>
+                        <button id="closeModal2" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                            닫기
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!--pray1070 2025-09-25 수정버튼 모달-->
+            <div id="editModal"  class="fixed p-6 inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden" role="dialog" aria-labelledby="eidt-modal-title" aria-modal="true">
+                <div class="bg-white rounded-lg p-6 w-full h-full overflow-auto m-4 flex flex-col">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 id="modal-title" class="text-xl font-semibold text-gray-800">이미지 수정 </h3>
+                        <div><button id="stagePlus" class="w-8 border">+</button>스테이지<button id="stageMinus" class="w-8 border">-</button></div>
+                        <div><button id="imagePlus" class="w-8 border">+</button>이미지<button id="imageMinus" class="w-8 border">-</button></div>
+                        <button id="editcloseModalBtn" class="text-gray-500 hover:text-gray-700 text-2xl font-bold" aria-label="수정 미리보기 닫기">
+                            ×
+                        </button>
+                    </div>
+                    
+                        
+                    <div id="editContainer" class="flex bg-yellow-200 overflow-auto items-center justify-center gap-6 flex-1" ></div>
+                        
+                    
+                    <div class="mt-6 flex justify-center space-x-4">
+                        <button id="editSaveBtn" class="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                            저장
+                        </button>
+                        <button id="editcloseModalBtn_footer" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-lg transition-colors">
+                            닫기
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+
+            <script>
+                class ThumbnailEditor {
+                    constructor() {
+                        this.uploadedImages = [];
+                        this.processedImages = [];
+                        this.initializeElements();
+                        this.bindEvents();
+                    }
+
+                    initializeElements() {
+                        this.uploadArea = document.getElementById('uploadArea');
+                        this.uploadBtn = document.getElementById('uploadBtn');
+                        this.fileInput = document.getElementById('fileInput');
+                        this.widthInput = document.getElementById('width');
+                        this.heightInput = document.getElementById('height');
+                        this.maintainRatioCheckbox = document.getElementById('maintainRatio');
+                        this.resizeModeRadios = document.querySelectorAll('input[name="resizeMode"]');
+                        this.previewSection = document.getElementById('previewSection');
+                        this.processedSection = document.getElementById('processedSection');
+                        this.imagesGrid = document.getElementById('imagesGrid');
+                        this.processedGrid = document.getElementById('processedGrid');
+                        this.resizeBtn = document.getElementById('resizeBtn');
+                        this.downloadAllBtn = document.getElementById('downloadAllBtn');
+                        this.clearBtn = document.getElementById('clearBtn');
+                        this.presetButtons = document.querySelectorAll('.preset-btn');
+
+                        // 미리보기 모달 요소들
+                        this.imagePreviewModal = document.getElementById('imagePreviewModal');
+                        this.closeModalBtn = document.getElementById('closeModal');
+                        this.closeModal2Btn = document.getElementById('closeModal2');
+                        this.originalPreview = document.getElementById('originalPreview');
+                        this.resizedPreview = document.getElementById('resizedPreview');
+                        this.originalInfo = document.getElementById('originalInfo');
+                        this.resizedInfo = document.getElementById('resizedInfo');
+                        this.downloadPreviewImageBtn = document.getElementById('downloadPreviewImage');
+
+                        //pray1070 2025-09-25 수정버튼
+                        this.editModal = document.getElementById('editModal');
+                        this.closeBtn = document.getElementById('editcloseModalBtn');
+                        this.closeBtnFooter = document.getElementById('editcloseModalBtn_footer');
+                        this.editSaveBtn = document.getElementById('editSaveBtn');
+                        //pray1070 2025-09-26 kovas
+                        this.editContainer = document.getElementById('editContainer');
+                        
+
+                        this.stage = new Konva.Stage({
+                        container: 'editContainer',
+                        width: 100,
+                        height: 100,
+                        scaleX: 1.0, // X축을 확대
+                        scaleY: 1.0  // Y축을 확대
+                        });
+                        this.layer = new Konva.Layer();
+                        this.imageObj = new Image();
+                        
+                        this.stagePlus = document.getElementById('stagePlus');
+                        this.stageMinus = document.getElementById('stageMinus');
+                        this.imagePlus = document.getElementById('imagePlus');
+                        this.imageMinus = document.getElementById('imageMinus');
+
+                        this.imagearray = {};
+                        
+
+                        //pray END
+
+                        this.currentPreviewData = null;
+                    }
+
+                    bindEvents() {
+                        // 파일 입력 이벤트
+                        this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+
+                        // 업로드 버튼 이벤트 (이벤트 버블링 방지)
+                        this.uploadBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            this.fileInput.click();
+                        });
+
+                        // 드래그 앤 드롭 이벤트 (업로드 영역에만)
+                        this.uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
+                        this.uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+                        this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
+
+                        // 업로드 영역 클릭 이벤트 (버튼이 아닌 영역만)
+                        this.uploadArea.addEventListener('click', (e) => {
+                            // 버튼 클릭이 아닌 경우에만 파일 선택 창 열기
+                            if (e.target !== this.uploadBtn && !this.uploadBtn.contains(e.target)) {
+                                this.fileInput.click();
+                            }
+                        });
+
+                        // 사이즈 입력 이벤트
+                        this.widthInput.addEventListener('input', () => this.handleSizeChange('width'));
+                        this.heightInput.addEventListener('input', () => this.handleSizeChange('height'));
+
+
+                        // 프리셋 버튼 이벤트
+                        this.presetButtons.forEach(btn => {
+                            btn.addEventListener('click', () => this.setPresetSize(btn));
+                        });
+
+                        // 액션 버튼 이벤트
+                        this.resizeBtn.addEventListener('click', () => this.resizeAllImages());
+                        this.downloadAllBtn.addEventListener('click', () => this.downloadAllImages());
+                        this.clearBtn.addEventListener('click', () => this.clearAllImages());
+
+                        // 미리보기 모달 이벤트
+                        this.closeModalBtn.addEventListener('click', () => this.closePreviewModal());
+                        this.closeModal2Btn.addEventListener('click', () => this.closePreviewModal());
+                        this.downloadPreviewImageBtn.addEventListener('click', () => this.downloadCurrentPreviewImage());
+
+                        // 모달 배경 클릭 시 닫기
+                        this.imagePreviewModal.addEventListener('click', (e) => {
+                            if (e.target === this.imagePreviewModal) {
+                                this.closePreviewModal();
+                            }
+                        });
+
+                        //pray1070 2025-09-25 수정버튼
+                        this.closeBtn.addEventListener('click', ()=> this.closeEditModal());
+                        this.closeBtnFooter.addEventListener('click', ()=> this.closeEditModal());
+                        this.editModal.addEventListener('click', (e) => {
+                            if(e.target === this.editModal) {
+                                this.closeEditModal();
+                            }
+                        })
+                        this.stagePlus.addEventListener('click', () => this.stagePlusa());
+                        this.stageMinus.addEventListener('click', () => this.stageMinusa());
+                        this.imagePlus.addEventListener('click', () => this.imagePlusa());
+                        this.imageMinus.addEventListener('click', () => this.imageMinusa());
+                        
+
+                        //prayEND
+
+                        // ESC 키로 모달 닫기
+                        document.addEventListener('keydown', (e) => {
+                            if (e.key === 'Escape' && !this.imagePreviewModal.classList.contains('hidden')) {
+                                this.closePreviewModal();
+                            }
+                        });
+                    }
+
+                    handleDragOver(e) {
+                        e.preventDefault();
+                        this.uploadArea.classList.add('border-blue-400', 'bg-blue-50');
+                    }
+
+                    handleDragLeave(e) {
+                        e.preventDefault();
+                        this.uploadArea.classList.remove('border-blue-400', 'bg-blue-50');
+                    }
+
+                    handleDrop(e) {
+                        e.preventDefault();
+                        this.uploadArea.classList.remove('border-blue-400', 'bg-blue-50');
+                        const files = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+                        this.processFiles(files);
+                    }
+
+                    async handleFileSelect(e) {
+                        e.stopPropagation();
+                        console.log('파일 선택됨:', e.target.files.length, '개');
+                        const files = Array.from(e.target.files);
+
+                        //pray 스크롤
+                        document.getElementById('test').scrollIntoView({behavior: "smooth", block: "start"});
+
+                        if (files.length > 0) {
+                            this.processFiles(files);
+                            // 파일 선택 후 input 값 초기화 (같은 파일 재선택 가능하도록)
+                            e.target.value = '';
+                        }
+                    }
+
+                    processFiles(files) {
+                        files.forEach(file => {
+                            if (file.type.startsWith('image/')) {
+                                this.addImage(file);
+                            }
+                        });
+                        this.updateUI();
+                    }
+
+                    addImage(file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const img = new Image();
+                            img.onload = () => {
+                                const imageData = {
+                                    id: Date.now() + Math.random(),
+                                    file: file,
+                                    src: e.target.result,
+                                    originalWidth: img.width,
+                                    originalHeight: img.height,
+                                    name: file.name
+                                };
+                                this.uploadedImages.push(imageData);
+                                this.renderUploadedImages();
+                            };
+                            img.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+
+                    renderUploadedImages() {
+                        this.imagesGrid.innerHTML = '';
+                        this.uploadedImages.forEach(imageData => {
+                            const imageCard = this.createImageCard(imageData, false);
+                            this.imagesGrid.appendChild(imageCard);
+                        });
+                        this.updateUI();
+                    }
+
+                    createImageCard(imageData, isProcessed = false) {
+                        const card = document.createElement('div');
+                        card.className = 'bg-gray-50 rounded-lg p-4 border border-gray-200';
+                        card.setAttribute('role', 'gridcell');
+
+                        const img = document.createElement('img');
+                        img.src = imageData.src;
+                        img.className = 'w-full h-32 object-cover rounded-md mb-3';
+                        img.alt = isProcessed
+                            ? `리사이즈된 이미지: ${imageData.name} (${imageData.width}x${imageData.height})`
+                            : `업로드된 이미지: ${imageData.name} (${imageData.originalWidth}x${imageData.originalHeight})`;
+                        img.loading = 'lazy';
+
+                        const info = document.createElement('div');
+                        info.className = 'text-sm text-gray-600';
+
+                        const name = document.createElement('p');
+                        name.className = 'font-medium truncate mb-1';
+                        name.textContent = imageData.name;
+                        name.title = imageData.name; // 툴팁으로 전체 파일명 표시
+
+                        const dimensions = document.createElement('p');
+                        dimensions.textContent = `${imageData.originalWidth || imageData.width} × ${imageData.originalHeight || imageData.height}`;
+                        dimensions.setAttribute('aria-label', `이미지 크기: ${imageData.originalWidth || imageData.width} 픽셀 너비, ${imageData.originalHeight || imageData.height} 픽셀 높이`);
+
+                        info.appendChild(name);
+                        info.appendChild(dimensions);
+
+                        if (isProcessed) {
+                            const buttonContainer = document.createElement('div');
+                            buttonContainer.className = 'space-y-2';
+
+                            const previewBtn = document.createElement('button');
+                            previewBtn.className = 'w-full bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-1 px-3 rounded transition-colors';
+                            previewBtn.textContent = '미리보기';
+                            previewBtn.setAttribute('aria-label', `${imageData.name} 미리보기`);
+                            previewBtn.addEventListener('click', () => this.showImagePreview(imageData));
+
+                            const downloadBtn = document.createElement('button');
+                            downloadBtn.className = 'w-full bg-green-500 hover:bg-green-600 text-white text-sm font-medium py-1 px-3 rounded transition-colors';
+                            downloadBtn.textContent = '다운로드';
+                            downloadBtn.setAttribute('aria-label', `${imageData.name} 다운로드`);
+                            downloadBtn.addEventListener('click', () => this.downloadImage(imageData));
+
+                            buttonContainer.appendChild(previewBtn);
+                            buttonContainer.appendChild(downloadBtn);
+                            info.appendChild(buttonContainer);
+                        } else {
+                            //pray1070 2025-09-25 수정버튼
+                            const editBtn = document.createElement('button');
+                            editBtn.className = 'w-full mt-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-1 px-3 rounded transition-colors';
+                            editBtn.textContent = '수정';
+                            editBtn.setAttribute('aria-label', `${imageData.name} 수정`);
+                            editBtn.addEventListener('click', () => this.why(imageData));
+                            info.appendChild(editBtn);
+                            
+                            
+                            //
+                            const removeBtn = document.createElement('button');
+                            removeBtn.className = 'w-full mt-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium py-1 px-3 rounded transition-colors';
+                            removeBtn.textContent = '제거';
+                            removeBtn.setAttribute('aria-label', `${imageData.name} 제거`);
+                            removeBtn.addEventListener('click', () => this.removeImage(imageData.id));
+                            info.appendChild(removeBtn);
+                        }
+
+                        card.appendChild(img);
+                        card.appendChild(info);
+
+                        return card;
+                    }
+
+                //pray1070 2025-09-25 수정버튼
+
+                    handleEditSave(id) {
+                        return (event) => {
+                            this.saveImage(id);
+                        };
+                    }
+
+                    why(imageData) {
+                        //모달 키기
+                        this.editModal.classList.remove('hidden');
+
+                        // this.editSaveBtn.removeEventListener('click', this.tempListener);
+
+                        // this.tempListener = (event,imageData) => {
+                        //     // 이제 이 내부 함수가 실제 리스너로 등록됩니다.
+                        //     this.saveImage(imageData.id);
+                        // };
+                        this.editSaveBtn.addEventListener('click', () => {this.saveImage(imageData.id)}, { once: true });
+
+
+                        
+
+                        console.log("imageData : ", imageData);
+                        let x=0;
+                        let y=0;
+                        if(this.imagearray[imageData.id]) {
+                            x = this.imagearray[imageData.id][0];
+                            y = this.imagearray[imageData.id][1];
+                        }
+                        console.log(this.imagearray);
+
+                        console.log("x : y", imageData['x'],":",imageData['y']);
+
+                        const resizeMode = document.querySelector('input[name="resizeMode"]:checked').value;
+                        const imageWidth = imageData.originalWidth;
+                        const imageHeight = imageData.originalHeight;
+                        const resizeWidth = this.widthInput.value;
+                        const resizeHeight = this.heightInput.value;
+                        const editContainerWidth = this.editContainer.offsetWidth;
+                        const editContainerHeight = this.editContainer.offsetHeight;
+                        let barrier = editContainerWidth;
+                        if(editContainerWidth > editContainerHeight) {
+                            barrier = editContainerHeight;
+                        }
+
+                        console.log("editContainerWidth : ",editContainerWidth);
+                        this.stage.width(barrier);
+                        this.stage.height(barrier);
+                        
+                        console.log("stage Width : ", this.stage.width());
+                        console.log("stage Height : ", this.stage.height());
+
+                        if(resizeMode == "crop") {
+
+                        }
+
+                        //이미지 출력
+                        this.imageObj.onload = () => {
+                                this.editimage = new Konva.Image({
+                                x: x,
+                                y: y,
+                                image: this.imageObj,
+                                width: barrier,
+                                height: barrier,
+                                draggable: true,
+                            });
+
+                            // add cursor styling
+                            this.editimage.on('mouseover', function () {
+                                document.body.style.cursor = 'pointer';
+                            });
+                            this.editimage.on('mouseout', function () {
+                                document.body.style.cursor = 'default';
+                            });
+                            
+                            this.layer.add(this.editimage);
+                            
+                            this.layer.draw(); 
+                            console.log("editimageX : ", this.editimage.width());
+                        };
+                        this.imageObj.src = imageData.src;
+                        this.stage.add(this.layer);
+                        
+                        this.stage.on('click', function (e) {
+                            const pointerPos = this.getPointerPosition();
+                            if (pointerPos) {
+                                console.log("클릭 위치 X:", pointerPos.x);
+                                console.log("클릭 위치 Y:", pointerPos.y);
+                            }
+                        });
+                        
+                    }
+
+
+                    editprocess(imageData) {
+                        //모달 키기
+                        this.editModal.classList.remove('hidden');
+
+                        
+
+                        //값 할당
+                        const resizeMode = document.querySelector('input[name="resizeMode"]:checked').value;
+                        let width = 0;
+                        let height = 0;
+                        let x = 0;
+                        let y = 0;
+                        const imageWidth = imageData.originalWidth;
+                        const imageHeight = imageData.originalHeight;
+                        const resizeWidth = this.widthInput.value;
+                        const resizeHeight = this.heightInput.value;
+                        const editContainerWidth = this.editContainer.offsetWidth;
+                        const editContainerHeight = this.editContainer.offsetHeight;
+
+                        //모달 사이즈 정하기
+                        console.log("model offsetWidth : ", this.editContainer.offsetWidth);
+                        console.log("editContainerWidth : ", editContainerWidth);
+                        console.log("editContainerHeight : ", editContainerHeight);
+                        console.log("editmodel offsetWidth : ", editModal.offsetWidth);
+                        console.log("editmodel offsetHeight : ", editModal.offsetHeight);
+
+
+                        this.stage.width(resizeWidth);
+                        this.stage.height(600);
+                        let stagescale = 0;
+
+                        //스테이지 사이즈 정하기
+                        //스테이지가 모달 창 사이즈보다 더 큼
+                        if(resizeWidth > editContainerWidth || resizeHeight > editContainerHeight) {
+                            //스테이지가 가로 사이즈가 더 큼 - > 스테이지의 가로 크기를 기준으로 맞춤
+                            if(resizeWidth / resizeHeight > editContainerWidth / editContainerHeight) {
+                                stagescale = editContainerWidth / resizeWidth;
+                                console.log("가로 더큼");
+                                console.log("stagescale : ", stagescale);
+                            } else {
+                                stagescale = editContainerHeight / resizeHeight;
+                                console.log("stagescale : ", stagescale);
+                                console.log("세로 더큼");
+                            }
+                        }
+
+                        console.log("stage width", this.stage.width());
+                        console.log("stage scalex", this.stage.scaleX());
+
+
+                        //이미지 사이즈 맞추기
+                        //crop
+                        if(resizeMode == "crop") {
+
+                            //이미지가 가로로 더 김 -> 세로 맞추고 가로는 자르기
+                            if(imageWidth / imageHeight > resizeWidth / resizeHeight) {
+                                height = resizeHeight;
+                                width = Math.round(imageWidth * (imageHeight / resizeHeight));
+                                x = Math.floor((width - resizeWidth) / 2) * -1;
+                            } else {
+                                width = resizeWidth;
+                                height = Math.round(imageHeight * (imageWidth / resizeWidth));
+                                y = Math.floor((height - resizeHeight) / 2) * -1;
+                            }
+                        //늘이기
+                        } else if(resizeMode == "stretch") {
+                            width = resizeWidth;
+                            console.log("resizeWidth : ", resizeWidth);
+                            height = resizeHeight;
+                            //x = -371;
+                        }
+
+                        console.log("width : ", width);
+                        console.log("height : ", height);
+                        console.log("x : ", x);
+                        console.log("y : ",y) ;
+                        console.log(imageData);
+
+                        //이미지 출력
+                        this.imageObj.onload = () => {
+                                this.editimage = new Konva.Image({
+                                x: x,
+                                y: y,
+                                image: this.imageObj,
+                                width: width,
+                                height: height,
+                                draggable: true,
+                                scaleX: 1-stagescale,
+                                scaleY: 1-stagescale,
+                            });
+
+                            // add cursor styling
+                            this.editimage.on('mouseover', function () {
+                                document.body.style.cursor = 'pointer';
+                            });
+                            this.editimage.on('mouseout', function () {
+                                document.body.style.cursor = 'default';
+                            });
+                            
+                            this.layer.add(this.editimage);
+                            
+                            this.layer.draw(); 
+                            console.log("editimageX : ", this.editimage.width());
+                            this.stage.scaleX(1-stagescale);
+                            this.stage.scaleY(1-stagescale);
+                        };
+                        this.imageObj.src = imageData.src;
+                        this.stage.add(this.layer);
+                        
+                        this.stage.on('click', function (e) {
+                            const pointerPos = this.getPointerPosition();
+                            if (pointerPos) {
+                                console.log("클릭 위치 X:", pointerPos.x);
+                                console.log("클릭 위치 Y:", pointerPos.y);
+                            }
+                        });
+                    }
+
+                    editImage(imageData) {
+                        console.log(`${imageData.id}수정 버튼 클릭됨`);
+                        const resizeMode = document.querySelector('input[name="resizeMode"]:checked').value;
+                        console.log("mode : ", resizeMode);
+                        console.log(imageData);
+                        imageData['test'] = '1';
+                        // 모달 키기
+                        this.editModal.classList.remove('hidden');
+                        console.log("width : ", window.innerWidth);
+                        console.log("height : ", window.innerHeight);
+                        //이미지 크기 설정
+                        console.log(this.heightInput.value);
+                        console.log("ss", this.widthInput.value);
+                        this.imageObj.onload = () => {
+                                this.editimage = new Konva.Image({
+                                x: -100,
+                                y: 0,
+                                image: this.imageObj,
+                                width: imageData.originalWidth,
+                                height: imageData.originalHeight,
+                                draggable: true,
+                            });
+
+                            // add cursor styling
+                            this.editimage.on('mouseover', function () {
+                                document.body.style.cursor = 'pointer';
+                            });
+                            this.editimage.on('mouseout', function () {
+                                document.body.style.cursor = 'default';
+                            });
+                            
+                            this.layer.add(this.editimage);
+                        };
+                        this.imageObj.src = imageData.src;
+
+                        this.stage.add(this.layer);
+                        
+
+                        // add event delegation
+                        this.layer.on('click', function (evt) {
+                            const shape = evt.target;
+                            console.log(shape.getClassName());
+                        });
+
+                        this.editContainerWidth = document.getElementById('editContainer').getBoundingClientRect().width;
+                        this.editContainerHeight = document.getElementById('editContainer').getBoundingClientRect().height;
+                        console.log("aftereditContainerWidth", this.editContainerWidth);
+                        console.log("aftereditContainerHeight", this.editContainerHeight);
+                        console.log("width",this.widthInput.value);
+                        this.stage.width(this.widthInput.value);
+                        this.stage.height(this.heightInput.value);
+                    }
+                    
+                    closeEditModal() {
+                        // 모달 끄기
+                        this.editModal.classList.add('hidden');
+                        this.layer.destroy(this.editimage);
+
+                    }
+
+                    saveImage(id) {
+                        imgae['x']
+                        imgae.x
+                        console.log("saveImageBtn");
+                        console.log("id : ", id);
+                        this.editModal.classList.add('hidden');
+                        
+                        this.imagearray[id] = [this.editimage.x(),this.editimage.y()];
+                        this.layer.destroy(this.editimage);
+                    }
+
+                    stagePlusa() {
+                        this.stage.scaleX(this.stage.scaleX() * 1.1);
+                        this.stage.scaleY(this.stage.scaleY() * 1.1);
+                        console.log("stage", this.stage.width());
+                    }
+                    stageMinusa() {
+                        this.stage.scaleX(this.stage.scaleX() * 0.9);
+                        this.stage.scaleY(this.stage.scaleY() * 0.9);
+                        console.log("stage", this.stage.width());
+                    }
+                    imagePlusa() {
+                        this.editimage.scaleX(this.editimage.scaleX() * 1.1);
+                        this.editimage.scaleY(this.editimage.scaleY() * 1.1);
+                    }
+                    imageMinusa() {
+                        this.editimage.scaleX(this.editimage.scaleX() * 0.9);
+                        this.editimage.scaleY(this.editimage.scaleY() * 0.9);
+                    }
+
+                    //pray
+
+                    removeImage(id) {
+                        this.uploadedImages = this.uploadedImages.filter(img => img.id !== id);
+                        this.renderUploadedImages();
+                    }
+
+                    handleSizeChange(changedInput) {
+                        if (!this.maintainRatioCheckbox.checked) return;
+
+                        const width = parseInt(this.widthInput.value);
+                        const height = parseInt(this.heightInput.value);
+
+                        if (this.uploadedImages.length > 0) {
+                            const firstImage = this.uploadedImages[0];
+                            const aspectRatio = firstImage.originalWidth / firstImage.originalHeight;
+
+                            if (changedInput === 'width' && width > 0) {
+                                this.heightInput.value = Math.round(width / aspectRatio);
+                            } else if (changedInput === 'height' && height > 0) {
+                                this.widthInput.value = Math.round(height * aspectRatio);
+                            }
+                        } else {
+                            // 업로드된 이미지가 없을 때 기본 비율(1:1) 적용
+                            if (changedInput === 'width' && width > 0) {
+                                this.heightInput.value = width;
+                            } else if (changedInput === 'height' && height > 0) {
+                                this.widthInput.value = height;
+                            }
+                        }
+
+                    }
+
+                    setPresetSize(button) {
+                        const width = button.dataset.width;
+                        const height = button.dataset.height;
+                        this.widthInput.value = width;
+                        this.heightInput.value = height;
+
+                        // 프리셋 버튼 활성화 표시
+                        this.presetButtons.forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
+                        button.classList.add('bg-blue-500', 'text-white');
+                    }
+
+                    async resizeAllImages() {
+                        if (this.uploadedImages.length === 0) {
+                            alert('리사이즈할 이미지가 없습니다.');
+                            return;
+                        }
+
+                        let targetWidth = parseInt(this.widthInput.value);
+                        let targetHeight = parseInt(this.heightInput.value);
+                        
+                        // 너비 또는 높이 중 하나만 입력된 경우 각 이미지별로 비율 유지하여 처리
+                        const isWidthOnly = targetWidth > 0 && (!targetHeight || targetHeight <= 0);
+                        const isHeightOnly = targetHeight > 0 && (!targetWidth || targetWidth <= 0);
+
+                        if ((isWidthOnly || isHeightOnly) && this.maintainRatioCheckbox.checked) {
+                            // 각 이미지별로 개별 처리하는 모드
+                            this.resizeBtn.textContent = '처리 중...';
+                            this.resizeBtn.disabled = true;
+                            this.processedImages = [];
+                            
+                            for (const imageData of this.uploadedImages) {
+                                try {
+                                    
+                                    const aspectRatio = imageData.originalWidth / imageData.originalHeight;
+                                    let individualWidth, individualHeight;
+
+                                    if (isWidthOnly) {
+                                        individualWidth = targetWidth;
+                                        individualHeight = Math.round(targetWidth / aspectRatio);
+                                    } else {
+                                        individualHeight = targetHeight;
+                                        individualWidth = Math.round(targetHeight * aspectRatio);
+                                    }
+
+                                    const resizedImageData = await this.resizeImage(imageData, individualWidth, individualHeight);
+                                    this.processedImages.push(resizedImageData);
+                                } catch (error) {
+                                    console.error('이미지 리사이즈 실패:', error);
+                                }
+                            }
+
+                            this.renderProcessedImages();
+                            this.resizeBtn.textContent = '모든 이미지 리사이즈';
+                            this.resizeBtn.disabled = false;
+                            return;
+                        }
+
+                        // 기존 로직: 너비와 높이가 모두 지정된 경우
+                        if (!targetWidth || !targetHeight || targetWidth <= 0 || targetHeight <= 0) {
+                            alert('올바른 크기를 입력해주세요.');
+                            return;
+                        }
+
+                        this.resizeBtn.textContent = '처리 중...';
+                        this.resizeBtn.disabled = true;
+
+                        this.processedImages = [];
+
+                        for (const imageData of this.uploadedImages) {
+                            try {
+                                const resizedImageData = await this.resizeImage(imageData, targetWidth, targetHeight);
+                                this.processedImages.push(resizedImageData);
+                            } catch (error) {
+                                console.error('이미지 리사이즈 실패:', error);
+                            }
+                        }
+
+                        this.renderProcessedImages();
+                        this.resizeBtn.textContent = '모든 이미지 리사이즈';
+                        this.resizeBtn.disabled = false;
+                    }
+
+                    resizeImage(imageData, targetWidth, targetHeight) {
+                        return new Promise((resolve) => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            const img = new Image();
+
+                            img.onload = () => {
+                                canvas.width = targetWidth;
+                                canvas.height = targetHeight;
+
+                                // 리사이즈 모드 확인
+                                const resizeMode = document.querySelector('input[name="resizeMode"]:checked').value;
+
+                                if (resizeMode === 'crop') {
+                                    // 크롭 모드: 비율을 유지하면서 가운데 정렬하여 크롭
+                                    const sourceAspectRatio = img.width / img.height;
+                                    const targetAspectRatio = targetWidth / targetHeight;
+
+                                    let sourceX = 0;
+                                    let sourceY = 0;
+                                    let sourceWidth = img.width;
+                                    let sourceHeight = img.height;
+
+                                    if (sourceAspectRatio > targetAspectRatio) {
+                                        // 원본이 더 넓음 - 좌우를 크롭
+                                        sourceWidth = img.height * targetAspectRatio;
+                                        sourceX = (img.width - sourceWidth) / 2;
+                                    } else {
+                                        // 원본이 더 높음 - 상하를 크롭
+                                        sourceHeight = img.width / targetAspectRatio;
+                                        sourceY = (img.height - sourceHeight) / 2;
+                                    }
+
+                                    // 크롭된 영역을 캔버스에 그리기
+                                    ctx.drawImage(
+                                        img,
+                                        sourceX, sourceY, sourceWidth, sourceHeight,
+                                        0, 0, targetWidth, targetHeight
+                                    );
+                                } else {
+                                    // 늘이기 모드: 전체 이미지를 타겟 크기에 맞춰 늘이기
+                                    ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+                                }
+
+                                // 이미지 품질 설정 확인
+                                const imageQuality = document.querySelector('input[name="imageQuality"]:checked').value;
+                                let outputFormat, quality, fileExtension;
+
+                                switch (imageQuality) {
+                                    case 'high':
+                                        outputFormat = 'image/png';
+                                        quality = 1.0;
+                                        fileExtension = 'png';
+                                        break;
+                                    case 'web':
+                                        outputFormat = 'image/jpeg';
+                                        quality = 0.8;
+                                        fileExtension = 'jpg';
+                                        break;
+                                    case 'optimized':
+                                        outputFormat = 'image/jpeg';
+                                        quality = 0.6;
+                                        fileExtension = 'jpg';
+                                        break;
+                                    default:
+                                        outputFormat = 'image/png';
+                                        quality = 1.0;
+                                        fileExtension = 'png';
+                                }
+
+                                // 캔버스를 blob으로 변환
+                                canvas.toBlob((blob) => {
+                                    const resizedImageData = {
+                                        id: imageData.id,
+                                        src: canvas.toDataURL(outputFormat, quality),
+                                        blob: blob,
+                                        width: targetWidth,
+                                        height: targetHeight,
+                                        name: `resized_${imageData.name.split('.')[0]}.${fileExtension}`,
+                                        format: outputFormat,
+                                        quality: quality
+                                    };
+                                    resolve(resizedImageData);
+                                }, outputFormat, quality);
+                            };
+
+                            img.src = imageData.src;
+                        });
+                    }
+
+                    renderProcessedImages() {
+                        this.processedGrid.innerHTML = '';
+                        this.processedImages.forEach(imageData => {
+                            const imageCard = this.createImageCard(imageData, true);
+                            this.processedGrid.appendChild(imageCard);
+                        });
+                        this.updateUI();
+                    }
+
+                    downloadImage(imageData) {
+                        const link = document.createElement('a');
+                        link.href = imageData.src;
+                        link.download = imageData.name;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    }
+
+                    async downloadAllImages() {
+                        if (this.processedImages.length === 0) {
+                            alert('다운로드할 이미지가 없습니다.');
+                            return;
+                        }
+
+                        try {
+                            // 다운로드 버튼 상태 변경
+                            this.downloadAllBtn.textContent = 'ZIP 생성 중...';
+                            this.downloadAllBtn.disabled = true;
+
+                            // JSZip 인스턴스 생성
+                            const zip = new JSZip();
+
+                            // 각 이미지를 ZIP에 추가
+                            for (let i = 0; i < this.processedImages.length; i++) {
+                                const imageData = this.processedImages[i];
+
+                                // Canvas에서 blob 데이터 가져오기
+                                const response = await fetch(imageData.src);
+                                const blob = await response.blob();
+
+                                // 파일명 중복 방지를 위해 인덱스 추가
+                                const fileName = `${i + 1}_${imageData.name}`;
+                                zip.file(fileName, blob);
+                            }
+
+                            // ZIP 파일 생성
+                            const zipBlob = await zip.generateAsync({type: 'blob'});
+
+                            // ZIP 파일 다운로드
+                            const link = document.createElement('a');
+                            link.href = URL.createObjectURL(zipBlob);
+                            link.download = `resized_images_${new Date().getTime()}.zip`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+
+                            // URL 객체 해제
+                            URL.revokeObjectURL(link.href);
+
+                        } catch (error) {
+                            console.error('ZIP 파일 생성 실패:', error);
+                            alert('ZIP 파일 생성 중 오류가 발생했습니다.');
+                        } finally {
+                            // 버튼 상태 복원
+                            this.downloadAllBtn.textContent = 'ZIP으로 다운로드';
+                            this.downloadAllBtn.disabled = false;
+                        }
+                    }
+
+                    clearAllImages() {
+                        if (confirm('모든 이미지를 삭제하시겠습니까?')) {
+                            this.uploadedImages = [];
+                            this.processedImages = [];
+                            this.renderUploadedImages();
+                            this.renderProcessedImages();
+                            this.updateUI();
+                        }
+                    }
+
+                    updateUI() {
+                        // 미리보기 섹션 표시/숨김
+                        if (this.uploadedImages.length > 0) {
+                            this.previewSection.classList.remove('hidden');
+                        } else {
+                            this.previewSection.classList.add('hidden');
+                        }
+
+                        // 처리된 이미지 섹션 표시/숨김
+                        if (this.processedImages.length > 0) {
+                            this.processedSection.classList.remove('hidden');
+                            this.downloadAllBtn.classList.remove('hidden');
+                        } else {
+                            this.processedSection.classList.add('hidden');
+                            this.downloadAllBtn.classList.add('hidden');
+                        }
+                    }
+
+                    showImagePreview(resizedImageData) {
+                        // 원본 이미지 찾기
+                        const originalImage = this.uploadedImages.find(img => img.id === resizedImageData.id);
+
+                        if (!originalImage) {
+                            alert('원본 이미지를 찾을 수 없습니다.');
+                            return;
+                        }
+
+                        // 현재 미리보기 데이터 저장
+                        this.currentPreviewData = resizedImageData;
+
+                        // 원본 이미지 정보 설정
+                        this.originalPreview.src = originalImage.src;
+                        this.originalInfo.textContent = `${originalImage.name} (${originalImage.originalWidth} × ${originalImage.originalHeight})`;
+
+                        // 리사이즈된 이미지 정보 설정
+                        this.resizedPreview.src = resizedImageData.src;
+                        this.resizedInfo.textContent = `${resizedImageData.name} (${resizedImageData.width} × ${resizedImageData.height})`;
+
+                        // 모달 표시
+                        this.imagePreviewModal.classList.remove('hidden');
+
+                        // 접근성을 위한 포커스 설정
+                        this.closeModalBtn.focus();
+                    }
+
+                    closePreviewModal() {
+                        this.imagePreviewModal.classList.add('hidden');
+                    }
+
+                    downloadCurrentPreviewImage() {
+                        if (this.currentPreviewData) {
+                            const link = document.createElement('a');
+                            link.href = this.currentPreviewData.src;
+                            link.download = this.currentPreviewData.name;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        }
+                    }
+                }
+
+                // 페이지 로드 시 썸네일 편집기 초기화
+                document.addEventListener('DOMContentLoaded', () => {
+                    new ThumbnailEditor();
+                });
+            </script>
+        </div>
+    </div>
+</x-app-layout>
