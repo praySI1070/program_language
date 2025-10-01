@@ -226,6 +226,10 @@
                         scaleX: 1.0, // X축을 확대
                         scaleY: 1.0  // Y축을 확대
                         });
+
+
+                        
+
                         this.layer = new Konva.Layer();
                         this.imageObj = new Image();
                         
@@ -437,10 +441,11 @@
                         } else {
                             //pray1070 2025-09-25 수정버튼
                             const editBtn = document.createElement('button');
+                            
                             editBtn.className = 'w-full mt-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium py-1 px-3 rounded transition-colors';
                             editBtn.textContent = '수정';
                             editBtn.setAttribute('aria-label', `${imageData.name} 수정`);
-                            editBtn.addEventListener('click', () => this.why(imageData));
+                            editBtn.addEventListener('click', () => this.editImageData(imageData));
                             info.appendChild(editBtn);
                             
                             
@@ -461,26 +466,24 @@
 
                 //pray1070 2025-09-25 수정버튼
 
-                    handleEditSave(id) {
-                        return (event) => {
-                            this.saveImage(id);
-                        };
-                    }
 
-                    why(imageData) {
+                    editImageData(imageData) {
                         //모달 키기
                         this.editModal.classList.remove('hidden');
+                        this.selectimage = this.uploadedImages.findIndex(img => img.id === imageData);
+                        console.log("selectimage", selectimage);
 
-                        // this.editSaveBtn.removeEventListener('click', this.tempListener);
-
-                        // this.tempListener = (event,imageData) => {
-                        //     // 이제 이 내부 함수가 실제 리스너로 등록됩니다.
-                        //     this.saveImage(imageData.id);
-                        // };
-                        this.editSaveBtn.addEventListener('click', () => {this.saveImage(imageData.id)}, { once: true });
-
-
-                        
+                        //canvas 영역 생성후 보더
+                        // 약간 기다린 후 실행 (예: 100ms)
+                        setTimeout(() => {
+                            const stageborder = document.querySelector('#editContainer canvas');
+                            if(stageborder) {
+                                stageborder.style.border = '2px solid red';
+                                console.log("스테이지 보더 완료");
+                            } else {
+                                console.log("canvas 요소를 찾을 수 없음");
+                            }
+                        }, 100);
 
                         console.log("imageData : ", imageData);
                         let x=0;
@@ -506,8 +509,8 @@
                         }
 
                         console.log("editContainerWidth : ",editContainerWidth);
-                        this.stage.width(barrier);
-                        this.stage.height(barrier);
+                        this.stage.width(barrier-2);
+                        this.stage.height(barrier-2);
                         
                         console.log("stage Width : ", this.stage.width());
                         console.log("stage Height : ", this.stage.height());
@@ -552,178 +555,6 @@
                         });
                         
                     }
-
-
-                    editprocess(imageData) {
-                        //모달 키기
-                        this.editModal.classList.remove('hidden');
-
-                        
-
-                        //값 할당
-                        const resizeMode = document.querySelector('input[name="resizeMode"]:checked').value;
-                        let width = 0;
-                        let height = 0;
-                        let x = 0;
-                        let y = 0;
-                        const imageWidth = imageData.originalWidth;
-                        const imageHeight = imageData.originalHeight;
-                        const resizeWidth = this.widthInput.value;
-                        const resizeHeight = this.heightInput.value;
-                        const editContainerWidth = this.editContainer.offsetWidth;
-                        const editContainerHeight = this.editContainer.offsetHeight;
-
-                        //모달 사이즈 정하기
-                        console.log("model offsetWidth : ", this.editContainer.offsetWidth);
-                        console.log("editContainerWidth : ", editContainerWidth);
-                        console.log("editContainerHeight : ", editContainerHeight);
-                        console.log("editmodel offsetWidth : ", editModal.offsetWidth);
-                        console.log("editmodel offsetHeight : ", editModal.offsetHeight);
-
-
-                        this.stage.width(resizeWidth);
-                        this.stage.height(600);
-                        let stagescale = 0;
-
-                        //스테이지 사이즈 정하기
-                        //스테이지가 모달 창 사이즈보다 더 큼
-                        if(resizeWidth > editContainerWidth || resizeHeight > editContainerHeight) {
-                            //스테이지가 가로 사이즈가 더 큼 - > 스테이지의 가로 크기를 기준으로 맞춤
-                            if(resizeWidth / resizeHeight > editContainerWidth / editContainerHeight) {
-                                stagescale = editContainerWidth / resizeWidth;
-                                console.log("가로 더큼");
-                                console.log("stagescale : ", stagescale);
-                            } else {
-                                stagescale = editContainerHeight / resizeHeight;
-                                console.log("stagescale : ", stagescale);
-                                console.log("세로 더큼");
-                            }
-                        }
-
-                        console.log("stage width", this.stage.width());
-                        console.log("stage scalex", this.stage.scaleX());
-
-
-                        //이미지 사이즈 맞추기
-                        //crop
-                        if(resizeMode == "crop") {
-
-                            //이미지가 가로로 더 김 -> 세로 맞추고 가로는 자르기
-                            if(imageWidth / imageHeight > resizeWidth / resizeHeight) {
-                                height = resizeHeight;
-                                width = Math.round(imageWidth * (imageHeight / resizeHeight));
-                                x = Math.floor((width - resizeWidth) / 2) * -1;
-                            } else {
-                                width = resizeWidth;
-                                height = Math.round(imageHeight * (imageWidth / resizeWidth));
-                                y = Math.floor((height - resizeHeight) / 2) * -1;
-                            }
-                        //늘이기
-                        } else if(resizeMode == "stretch") {
-                            width = resizeWidth;
-                            console.log("resizeWidth : ", resizeWidth);
-                            height = resizeHeight;
-                            //x = -371;
-                        }
-
-                        console.log("width : ", width);
-                        console.log("height : ", height);
-                        console.log("x : ", x);
-                        console.log("y : ",y) ;
-                        console.log(imageData);
-
-                        //이미지 출력
-                        this.imageObj.onload = () => {
-                                this.editimage = new Konva.Image({
-                                x: x,
-                                y: y,
-                                image: this.imageObj,
-                                width: width,
-                                height: height,
-                                draggable: true,
-                                scaleX: 1-stagescale,
-                                scaleY: 1-stagescale,
-                            });
-
-                            // add cursor styling
-                            this.editimage.on('mouseover', function () {
-                                document.body.style.cursor = 'pointer';
-                            });
-                            this.editimage.on('mouseout', function () {
-                                document.body.style.cursor = 'default';
-                            });
-                            
-                            this.layer.add(this.editimage);
-                            
-                            this.layer.draw(); 
-                            console.log("editimageX : ", this.editimage.width());
-                            this.stage.scaleX(1-stagescale);
-                            this.stage.scaleY(1-stagescale);
-                        };
-                        this.imageObj.src = imageData.src;
-                        this.stage.add(this.layer);
-                        
-                        this.stage.on('click', function (e) {
-                            const pointerPos = this.getPointerPosition();
-                            if (pointerPos) {
-                                console.log("클릭 위치 X:", pointerPos.x);
-                                console.log("클릭 위치 Y:", pointerPos.y);
-                            }
-                        });
-                    }
-
-                    editImage(imageData) {
-                        console.log(`${imageData.id}수정 버튼 클릭됨`);
-                        const resizeMode = document.querySelector('input[name="resizeMode"]:checked').value;
-                        console.log("mode : ", resizeMode);
-                        console.log(imageData);
-                        imageData['test'] = '1';
-                        // 모달 키기
-                        this.editModal.classList.remove('hidden');
-                        console.log("width : ", window.innerWidth);
-                        console.log("height : ", window.innerHeight);
-                        //이미지 크기 설정
-                        console.log(this.heightInput.value);
-                        console.log("ss", this.widthInput.value);
-                        this.imageObj.onload = () => {
-                                this.editimage = new Konva.Image({
-                                x: -100,
-                                y: 0,
-                                image: this.imageObj,
-                                width: imageData.originalWidth,
-                                height: imageData.originalHeight,
-                                draggable: true,
-                            });
-
-                            // add cursor styling
-                            this.editimage.on('mouseover', function () {
-                                document.body.style.cursor = 'pointer';
-                            });
-                            this.editimage.on('mouseout', function () {
-                                document.body.style.cursor = 'default';
-                            });
-                            
-                            this.layer.add(this.editimage);
-                        };
-                        this.imageObj.src = imageData.src;
-
-                        this.stage.add(this.layer);
-                        
-
-                        // add event delegation
-                        this.layer.on('click', function (evt) {
-                            const shape = evt.target;
-                            console.log(shape.getClassName());
-                        });
-
-                        this.editContainerWidth = document.getElementById('editContainer').getBoundingClientRect().width;
-                        this.editContainerHeight = document.getElementById('editContainer').getBoundingClientRect().height;
-                        console.log("aftereditContainerWidth", this.editContainerWidth);
-                        console.log("aftereditContainerHeight", this.editContainerHeight);
-                        console.log("width",this.widthInput.value);
-                        this.stage.width(this.widthInput.value);
-                        this.stage.height(this.heightInput.value);
-                    }
                     
                     closeEditModal() {
                         // 모달 끄기
@@ -732,14 +563,13 @@
 
                     }
 
-                    saveImage(id) {
-                        imgae['x']
-                        imgae.x
+                    saveImage() {
+                        
                         console.log("saveImageBtn");
                         console.log("id : ", id);
                         this.editModal.classList.add('hidden');
                         
-                        this.imagearray[id] = [this.editimage.x(),this.editimage.y()];
+                        
                         this.layer.destroy(this.editimage);
                     }
 
@@ -1111,7 +941,10 @@
                 document.addEventListener('DOMContentLoaded', () => {
                     new ThumbnailEditor();
                 });
+
+                
             </script>
+            
         </div>
     </div>
 </x-app-layout>
