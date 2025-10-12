@@ -3,3 +3,10 @@ const box = stage.getContent();
 
 function loadImage(src) { return new Promise((resolve, reject) => { const img = new Image(); img.onload = () => resolve(img); img.onerror = (err) => reject(err); img.src = src; }); }
   -> 이미지 promise로 반환 함수 ( await를 사용하려면 이 방법 밖에 없는듯 )
+
+var json = stage.toJSON();
+var json =
+  '{"attrs":{"width":578,"height":200},"className":"Stage","children":[{"attrs":{},"className":"Layer","children":[{"attrs":{"x":100,"y":100,"sides":6,"radius":70,"fill":"red","stroke":"black","strokeWidth":4},"className":"RegularPolygon"}]}]}';
+
+var stage = Konva.Node.create(json, 'container');
+  -> 직렬화도 가능
