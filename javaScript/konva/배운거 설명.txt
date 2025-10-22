@@ -1,3 +1,37 @@
+stage = new Konva.Stage({
+                        container: 'editContainer',  // stage가 덮을 div 영역 설정
+                        width: 100,                  // stage 크기 설정
+                        height: 100,                 // stage 크기 설정
+                        scaleX: 1.0, // X축을 확대
+                        scaleY: 1.0  // Y축을 확대
+                        });
+  -> stage 생성
+    -> canvas대신 konva가 관리하는 영역
+
+layer = new Konva.Layer();
+  -> 레이어 생성
+    -> 이 위에 이미지같은걸 올려서 관리 여러개 올릴수도있음
+
+imageObj = new Image();
+  ->js에서 이미지 생성
+
+editimage = new Konva.Image({
+        image: this.imageObj,
+        draggable: true,              // 드래그 가능 여부
+});
+  -> konva에서 관리하는 이미지 생성
+    
+
+editArea = new Konva.Rect({
+                stroke: 'red',         // 테두리 색상
+                strokeWidth: 2,        // 테두리 두께
+                fillEnabled: false,    // ✅ fill 비활성화
+                listening: false       // ✅ 이벤트 무시 (아래 객체 클릭 허용)
+});
+  ->Rect (사각형모양) 생성
+
+
+
 const box = stage.getContent();
   -> 스테이지 내부의 div를 반환
 
@@ -10,3 +44,35 @@ var json =
 
 var stage = Konva.Node.create(json, 'container');
   -> 직렬화도 가능
+
+//스테이지 스케일 조정
+  editStageScale(viewlate) {
+      // 2. 현재 스케일
+      const oldScale = this.stage.scaleX();
+
+      // 3. 현재 스테이지 중심 (화면 기준)
+      const stageCenter = {
+          x: this.stage.width() / 2,
+          y: this.stage.height() / 2,
+      };
+
+      // 4. 중심이 가리키는 실제 콘텐츠 좌표 계산
+      const centerContentPoint = {
+          x: (stageCenter.x - this.stage.x()) / oldScale,
+          y: (stageCenter.y - this.stage.y()) / oldScale,
+      };
+      // 5. 새로운 스케일 적용
+      this.stage.scale({ x: viewlate, y: viewlate });
+
+      // 6. 보정된 position 계산 → 중심 유지
+      const newPos = {
+      x: stageCenter.x - centerContentPoint.x * viewlate,
+      y: stageCenter.y - centerContentPoint.y * viewlate,
+      };
+      this.stage.position(newPos);
+
+      // 7. 화면 다시 그리기
+      this.stage.batchDraw();
+      this.editUpDown.value = Math.round(viewlate * 100);
+  }
+-> 스테이지가 이동해도 초점 중심으로 맞추기
