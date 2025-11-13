@@ -5,7 +5,7 @@ html 요소 셀렉
 1. id로
 
    ```js
-        window.document.getElementById('id');
+     window.document.getElementById('id');
    ```
 
 3. css로
