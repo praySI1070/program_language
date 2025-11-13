@@ -4,8 +4,9 @@ html 요소 셀렉
 
 1. id로
 
-        ```js
+   ```js
         window.document.getElementById('id');
+   ```
 
 3. css로
 
