@@ -33,3 +33,20 @@
 스타일 변화
 
       component.setStyle({})
+
+wrapper 반환 ( 컴포넌트 반환)
+
+      const wrapper = editor.getWrapper();
+
+html 요소중에 body 반환 (html요소 반환)
+
+      const canvasBody = editor.Canvas.getBody();
+
+find로 조건맞는 컴포넌트 반환 (.global은 css 명) (배열 반환이라 [0])
+
+      const test = wrapper.find('.global_container_')[0];
+
+컴포넌트의 html 요소 반환 (view.el)
+
+      const CS = component.view.el;
+
