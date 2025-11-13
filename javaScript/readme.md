@@ -3,7 +3,11 @@
 html 요소 셀렉
 
 1. id로
-  window.document.getElementById('id');
 
-2. css로
-   window.document.querySelector('css');
+        ```js
+        window.document.getElementById('id');
+
+3. css로
+
+        ```js
+        window.document.querySelector('css');
