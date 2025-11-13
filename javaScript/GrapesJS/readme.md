@@ -2,10 +2,12 @@
 ----------
 
 타입 판단
-component.is('text')
+
+      component.is('text')
 
 돔 태그 판단
-component.attributes.tagName === 'div'
+
+      component.attributes.tagName === 'div'
 
 자식 전부 순회
 
@@ -23,3 +25,11 @@ component.attributes.tagName === 'div'
       rootComponents.forEach(cmp => {
       traverse(cmp);
       });
+
+스타일 추가
+
+      component.addStyle({})
+
+스타일 변화
+
+      component.setStyle({})
