@@ -8,18 +8,18 @@ component.is('text')
 component.attributes.tagName === 'div'
 
 자식 전부 순회
-//자식 전부 순회
-function traverse(component) {
+
+      function traverse(component) {
       
-    const children = component.components().models;
-    children.forEach(child => {
-        traverse(child); // 자식도 재귀 순회
-    });
-}
+          const children = component.components().models;
+          children.forEach(child => {
+              traverse(child); // 자식도 재귀 순회
+          });
+      }
 
-// 최상위 컴포넌트들 가져오기
-const rootComponents = editor.getComponents().models;
-
-rootComponents.forEach(cmp => {
-traverse(cmp);
-});
+      // 최상위 컴포넌트들 가져오기
+      const rootComponents = editor.getComponents().models;
+      
+      rootComponents.forEach(cmp => {
+      traverse(cmp);
+      });
